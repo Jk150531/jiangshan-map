@@ -375,6 +375,7 @@
             <label class="layer-chip"><input type="checkbox" id="chk-settlements" checked /><span id="lbl-settlements">古地名</span></label>
             <label class="layer-chip" title="名关雄隘 · 长城 · 大运河 · 丝绸之路"><input type="checkbox" id="chk-corridors" checked /><span id="lbl-corridors">关河丝路</span></label>
             <label class="layer-chip"><input type="checkbox" id="chk-milestones" checked /><span id="lbl-milestones">重大事件</span></label>
+            <label class="layer-chip" title="中国铁路站点按开通年份逐站出现"><input type="checkbox" id="chk-railway" checked /><span id="lbl-railway">铁路站线</span><span id="txt-railway-count" style="margin-left:6px;font-size:11px;opacity:.7"></span></label>
           </div>
         </div>
         <div class="layers-pop-section">
@@ -459,6 +460,7 @@
               <g id="grp-prov-names" class="is-hidden"></g>
               <g id="grp-settlements"></g>
               <g id="grp-milestones"></g>
+              <g id="grp-railway"></g>
               <g id="grp-journey"></g>
               <g id="grp-challenge"></g>
               <g id="grp-genealogy"></g>
@@ -768,5 +770,7 @@
   <script src="js/atlas_trace.js?v=3abfee29"></script>
   <script src="js/atlas_search.js?v=432e3c8b"></script>
   <script src="js/atlas_api.js?v=a81cb6af"></script>
+  <script defer src="js/railway_data.js?v=rail1"></script>
+  <script defer src="js/railway_layer.js?v=rail1"></script>
 </body>
 </html>
