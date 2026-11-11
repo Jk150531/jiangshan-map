@@ -70,7 +70,7 @@
     var year = app.year;
     var loc = app.locale === 'en';
     var shown = 0;
-    var fresh = [];
+    var all = [];
 
     // 1) 先画线：同年份或更早的相邻站连成一段，段色随较晚那站的开通年
     for (var i = 0; i < STATE.lines.length; i++) {
@@ -122,24 +122,42 @@
       t.textContent = loc ? s.n + ' Railway Station · opened ' + s.y : tip;
       dot.appendChild(t);
       STATE.group.appendChild(dot);
-      if (isNew) fresh.push({ s: s, p: q });
+      all.push({ s: s, p: q, fresh: isNew });
     }
 
-    // 3) 只给当年新开通的少数几站加小号标注
-    fresh.sort(function (a, b) { return a.s.n.length - b.s.n.length; });
-    var limit = loc ? 8 : 10;
-    for (var n = 0; n < fresh.length && n < limit; n++) {
-      var it = fresh[n];
+    // 3) 已建成的站一直保留站名：当年新开通的优先占位，其余按开通年份由近及远，
+    //    与已放置标注碰撞就跳过，保证小字号下仍可读。
+    var FS = 3.4;
+    var labels = all.slice();
+    labels.sort(function (a, b) { return (b.fresh ? 1 : 0) - (a.fresh ? 1 : 0) || b.s.y - a.s.y; });
+    var boxes = [];
+    for (var n = 0; n < labels.length; n++) {
+      var it = labels[n];
+      var name = it.s.n;
+      var w = 0;
+      for (var c = 0; c < name.length; c++) {
+        w += name.charCodeAt(c) > 255 ? FS : FS * 0.56;
+      }
+      var lx = it.p[0] + 2.6;
+      var ly = it.p[1] - 1.8;
+      var x0 = lx, x1 = lx + w, y0 = ly - FS * 0.9, y1 = ly + FS * 0.35;
+      var hit = false;
+      for (var b = 0; b < boxes.length; b++) {
+        var bb = boxes[b];
+        if (x0 < bb[2] && x1 > bb[0] && y0 < bb[3] && y1 > bb[1]) { hit = true; break; }
+      }
+      if (hit) continue;
+      boxes.push([x0, y0, x1, y1]);
       var lab = document.createElementNS(NS, 'text');
-      lab.setAttribute('x', (it.p[0] + 3).toFixed(1));
-      lab.setAttribute('y', (it.p[1] - 2.4).toFixed(1));
-      lab.setAttribute('font-size', '4.6');
-      lab.setAttribute('fill', '#3b2a1c');
+      lab.setAttribute('x', lx.toFixed(1));
+      lab.setAttribute('y', ly.toFixed(1));
+      lab.setAttribute('font-size', String(FS));
+      lab.setAttribute('fill', it.fresh ? '#1f1409' : '#4a382a');
       lab.setAttribute('paint-order', 'stroke');
-      lab.setAttribute('stroke', 'rgba(255,252,244,.85)');
-      lab.setAttribute('stroke-width', '0.9');
-      lab.setAttribute('class', 'rail-label');
-      lab.textContent = it.s.n;
+      lab.setAttribute('stroke', 'rgba(255,252,244,.92)');
+      lab.setAttribute('stroke-width', '0.8');
+      lab.setAttribute('class', it.fresh ? 'rail-label is-new' : 'rail-label');
+      lab.textContent = name;
       STATE.group.appendChild(lab);
     }
 
