@@ -1,0 +1,46 @@
+name: Atlas Integrity CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Atlas Integrity & Regression Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify generated event pinyin and search regressions
+        run: |
+          npm ci --prefix scripts/search-pinyin --ignore-scripts --no-audit --no-fund
+          npm test --prefix scripts/search-pinyin
+
+      - name: Verify polygon bundles are canonical encodings
+        run: node scripts/build_atlas.js --check
+
+      - name: Check polity border topology against baseline
+        run: node scripts/audit_topology.js --check
+
+      - name: Check prefecture layer against baseline
+        run: node scripts/audit_prefectures.js --check
+
+      - name: Check data references against baseline
+        run: node scripts/audit_sources.js --check
+
+      - name: Check first-paint synchronous script gzip budget
+        run: node scripts/perf_budget.js --check
+
+      - name: Check responsive UI layout geometry and non-overlap
+        run: node scripts/audit_layout.js --check
+
+      - name: Run Atlas Validation Suite
+        run: node scripts/validate_atlas.js
