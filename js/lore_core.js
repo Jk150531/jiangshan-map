@@ -903,7 +903,7 @@ window.ATLAS_LORE_DATA = Object.assign(window.ATLAS_LORE_DATA || {}, {
     {"key":"anlushan","zh":"安禄山","en":"An Lushan","courtesyZh":"三镇节度使 · 燕帝","courtesyEn":"Instigator of An Lushan Rebellion","dynastyKey":"tang","span":[703,757],"aliases":["安史"],"evCount":5},
     {"key":"huangchao","zh":"黄巢","en":"Huang Chao","courtesyZh":"冲天大将军 · 大齐皇帝","courtesyEn":"Leader of Late Tang Peasant War","dynastyKey":"tang","span":[820,884],"aliases":["冲天大将军"],"evCount":6},
     {"key":"licunxu","zh":"李存勖","en":"Li Cunxu","courtesyZh":"后唐庄宗 · 灭梁建唐","courtesyEn":"Emperor Zhuangzong of Later Tang","dynastyKey":"wudai","span":[885,926],"aliases":["后唐庄宗","李亚子"],"evCount":6},
-    {"key":"chairong","zh":"柴荣","en":"Chai Rong","courtesyZh":"后周世宗 · 五代第一明君","courtesyEn":"Emperor Shizong of Later Zhou","dynastyKey":"wudai","span":[921,959],"aliases":["后周世宗","周世宗","郭荣"],"evCount":5},
+    {"key":"chairong","zh":"柴荣","en":"Chai Rong","courtesyZh":"后周世宗 · 五代第一明君","courtesyEn":"Emperor Shizong of Later Zhou","dynastyKey":"wudai","span":[921,959],"aliases":["后周世宗","周世宗","郭荣"],"evCount":10},
     {"key":"liyu_nt","zh":"李煜","en":"Li Yu","courtesyZh":"南唐后主 · 词圣 · 字重光","courtesyEn":"Last Ruler of Southern Tang & Poet","dynastyKey":"wudai","span":[937,978],"aliases":["李后主","南唐后主","李重光"],"evCount":6},
     {"key":"hanshizhong","zh":"韩世忠","en":"Han Shizhong","courtesyZh":"蕲王 · 字良臣 · 中兴四将","courtesyEn":"Loyalist General of Southern Song","dynastyKey":"nansong","span":[1089,1151],"aliases":["韩良臣","韩蕲王"],"evCount":6},
     {"key":"xuda","zh":"徐达","en":"Xu Da","courtesyZh":"中山王 · 字天德 · 开国第一功臣","courtesyEn":"Chief Founding General of Ming","dynastyKey":"ming","span":[1332,1385],"aliases":["徐天德","中山王"],"evCount":5},
