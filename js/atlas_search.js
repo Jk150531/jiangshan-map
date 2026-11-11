@@ -1163,6 +1163,14 @@
         } else if (item.kind === 'event') {
           const dupEv = deduped.some(previous => this._isDuplicateSearchEvent(item, previous));
           if (dupEv) continue;
+          // 同一地点最多留 3 条事件：地名查询否则会被单一遗址的十几条史事占满，挤掉其他朝代与里程碑
+          const siteKey = (item.milestone && item.milestone.site) || '';
+          if (siteKey) {
+            const sameSite = deduped.filter(
+              (prev) => prev.kind === 'event' && prev.milestone && prev.milestone.site === siteKey
+            ).length;
+            if (sameSite >= 3) continue;
+          }
         }
         deduped.push(item);
       }
