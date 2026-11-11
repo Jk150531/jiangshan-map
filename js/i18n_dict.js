@@ -2898,6 +2898,7 @@ window.EN_LOCALE = {
     "康提": "Kandy",
     "吐蕃": "Tibetan Empire",
     "吐蕃诸部": "Tibetan Polities (Fragmented Tubo)",
+    "西羌诸部": "Western Qiang Tribes",
     "象雄": "Zhangzhung",
     "乌思藏": "Ü-Tsang (Tibet)",
     "南越": "Nanyue",
