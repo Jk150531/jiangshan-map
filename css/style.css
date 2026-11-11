@@ -5906,3 +5906,6 @@ button.story-inline-person:hover {
 .rail-line-tip {
   pointer-events: none;
 }
+.rail-line-tip-group {
+  pointer-events: none;
+}

@@ -203,19 +203,35 @@
   function showLineTip(txt, x, y) {
     hideLineTip();
     if (!STATE.group) return;
+    // 放大字号并加圆角底牌：原来 3.6 号字压在细线上几乎看不清
+    var FS = 5.4;
+    var w = 0;
+    for (var c = 0; c < txt.length; c++) w += txt.charCodeAt(c) > 255 ? FS : FS * 0.56;
+    var wrap = document.createElementNS(NS, 'g');
+    wrap.setAttribute('class', 'rail-line-tip-group');
+    var box = document.createElementNS(NS, 'rect');
+    box.setAttribute('x', (x - w / 2 - 2.1).toFixed(1));
+    box.setAttribute('y', (y - 11.6).toFixed(1));
+    box.setAttribute('width', (w + 4.2).toFixed(1));
+    box.setAttribute('height', '7.6');
+    box.setAttribute('rx', '1.7');
+    box.setAttribute('ry', '1.7');
+    box.setAttribute('fill', 'rgba(255,251,242,.97)');
+    box.setAttribute('stroke', 'rgba(122,86,52,.78)');
+    box.setAttribute('stroke-width', '0.6');
+    wrap.appendChild(box);
     var lab = document.createElementNS(NS, 'text');
     lab.setAttribute('x', x.toFixed(1));
-    lab.setAttribute('y', (y - 3.4).toFixed(1));
+    lab.setAttribute('y', (y - 6.1).toFixed(1));
     lab.setAttribute('text-anchor', 'middle');
-    lab.setAttribute('font-size', '3.6');
-    lab.setAttribute('fill', '#1f1409');
-    lab.setAttribute('paint-order', 'stroke');
-    lab.setAttribute('stroke', 'rgba(255,252,244,.95)');
-    lab.setAttribute('stroke-width', '0.9');
+    lab.setAttribute('font-size', String(FS));
+    lab.setAttribute('font-weight', '700');
+    lab.setAttribute('fill', '#241505');
     lab.setAttribute('class', 'rail-label rail-line-tip');
     lab.textContent = txt;
-    STATE.group.appendChild(lab);
-    STATE.lineTip = lab;
+    wrap.appendChild(lab);
+    STATE.group.appendChild(wrap);
+    STATE.lineTip = wrap;
   }
 
   // 透明的加宽命中线：让 0.9 宽的线段也有 4.5 宽的可悬停范围
