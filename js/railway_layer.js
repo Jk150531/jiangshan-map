@@ -174,6 +174,17 @@
         return r;
       };
     }
+    // 年份回拨/前拨都在 jumpToYear 里完成，而同朝代内它不会触发 _renderDynasty，
+    // 必须单独挂这里，否则往回拖动滑杆时铁路站点与线不会消失。
+    var origJump = app.jumpToYear;
+    if (typeof origJump === 'function' && !app.__railWrappedJump) {
+      app.jumpToYear = function (targetYear) {
+        var r = origJump.apply(this, arguments);
+        render(this);
+        return r;
+      };
+      app.__railWrappedJump = true;
+    }
     if (typeof app._renderAll === 'function' && !app.__railWrappedAll) {
       var origAll = app._renderAll;
       app._renderAll = function () {
