@@ -15,7 +15,18 @@
     [1960, '#256b7d'],
     [1970, '#2f4f8c'],
   ];
-  var NS = 'http://www.w3.org/2000/svg';
+  // 大站：直辖市、省会、路网枢纽与口岸，站名常显；其余小站只在鼠标滑过时出名字。
+  var MAJOR = {
+    北京: 1, 天津: 1, 上海: 1, 重庆: 1, 石家庄: 1, 太原: 1, 呼和浩特: 1, 沈阳: 1, 长春: 1, 哈尔滨: 1,
+    南京: 1, 杭州: 1, 合肥: 1, 福州: 1, 南昌: 1, 济南: 1, 郑州: 1, 武汉东: 1, 长沙: 1, 广州: 1,
+    南宁: 1, 成都: 1, 贵阳: 1, 昆明: 1, 西安: 1, 兰州: 1, 西宁: 1, 银川: 1, 乌鲁木齐南: 1,
+    大连: 1, 青岛: 1, 厦门: 1, 深圳: 1, 宁波: 1, 苏州: 1, 无锡: 1, 徐州: 1, 洛阳: 1, 襄阳: 1,
+    九江: 1, 蚌埠: 1, 包头东: 1, 大同: 1, 唐山: 1, 山海关: 1, 张家口: 1, 齐齐哈尔: 1,
+    牡丹江: 1, 佳木斯: 1, 锦州: 1, 丹东: 1, 吉林: 1, 四平: 1, 通化: 1, 承德: 1, 保定: 1, 邯郸: 1,
+    新乡: 1, 商丘: 1, 株洲: 1, 衡阳: 1, 柳州: 1, 桂林: 1, 湛江: 1, 绵阳: 1, 攀枝花: 1,
+    内江: 1, 宝鸡: 1, 天水: 1, 哈密: 1, 吐鲁番: 1, 满洲里: 1, 绥芬河: 1, 图们: 1, 集宁南: 1,
+    鹰潭: 1, 金华: 1, 常州: 1, 连云港: 1, 烟台: 1, 潍坊: 1, 淄博: 1, 德州: 1,
+  };
   // 线路本身的通车年：车站自身的启用年常在整条线路通车之前（该站先由别的老线开办），
   // 若只按站年画线，会提前画出当时并不存在的线路。这里对「现代才建成的线路」加一道闸门。
   var LINE_YEARS = {
@@ -49,7 +60,8 @@
     集通铁路: 1995,
     南疆铁路: 1984,
   };
-  var STATE = { on: true, group: null, app: null, lastYear: null, lines: null };
+  var NS = 'http://www.w3.org/2000/svg';
+  var STATE = { on: true, group: null, app: null, lastYear: null, lines: null, hover: null };
 
   function colorFor(year) {
     var c = DECADES[0][1];
@@ -95,8 +107,33 @@
     return out;
   }
 
+  function hideHover() {
+    if (STATE.hover && STATE.hover.parentNode) STATE.hover.parentNode.removeChild(STATE.hover);
+    STATE.hover = null;
+  }
+
+  function showHover(app, st) {
+    hideHover();
+    if (!STATE.group) return;
+    var p = app.projector.toScreen(st.x, st.z);
+    if (!p || !isFinite(p[0]) || !isFinite(p[1])) return;
+    var lab = document.createElementNS(NS, 'text');
+    lab.setAttribute('x', (p[0] + 3).toFixed(1));
+    lab.setAttribute('y', (p[1] - 2.6).toFixed(1));
+    lab.setAttribute('font-size', '3.6');
+    lab.setAttribute('fill', '#1f1409');
+    lab.setAttribute('paint-order', 'stroke');
+    lab.setAttribute('stroke', 'rgba(255,252,244,.95)');
+    lab.setAttribute('stroke-width', '0.9');
+    lab.setAttribute('class', 'rail-label is-hover');
+    lab.textContent = st.n;
+    STATE.group.appendChild(lab);
+    STATE.hover = lab;
+  }
+
   function render(app) {
     if (!STATE.group) return;
+    hideHover();
     while (STATE.group.firstChild) STATE.group.removeChild(STATE.group.firstChild);
     if (!STATE.on) return;
     if (!STATE.lines) STATE.lines = buildLines();
@@ -149,8 +186,8 @@
       dot.setAttribute('cy', q[1].toFixed(1));
       dot.setAttribute('r', r.toFixed(1));
       dot.setAttribute('fill', colorFor(s.y));
-      dot.setAttribute('stroke', isNew ? 'rgba(255,255,255,.85)' : 'none');
-      dot.setAttribute('stroke-width', isNew ? '0.7' : '0');
+      dot.setAttribute('stroke', isNew ? 'rgba(255,255,255,.85)' : 'rgba(0,0,0,0)');
+      dot.setAttribute('stroke-width', isNew ? '0.7' : '5');
       dot.setAttribute('class', isNew ? 'rail-station is-new' : 'rail-station');
       var tip = s.n + (s.l ? ' · ' + s.l : '') + ' · ' + fmtYear(s.y) + '开通';
       var t = document.createElementNS(NS, 'title');
@@ -158,13 +195,18 @@
       dot.appendChild(t);
       STATE.group.appendChild(dot);
       all.push({ s: s, p: q, fresh: isNew });
+      if (!MAJOR[s.n]) {
+        (function (st, el) {
+          el.addEventListener('mouseenter', function () { showHover(app, st); });
+          el.addEventListener('mouseleave', hideHover);
+        })(s, dot);
+      }
     }
 
-    // 3) 已建成的站一直保留站名：当年新开通的优先占位，其余按开通年份由近及远，
-    //    与已放置标注碰撞就跳过，保证小字号下仍可读。
+    // 3) 站名分两档：大站常显；小站只在鼠标滑过时出名字。
     var FS = 3.4;
-    var labels = all.slice();
-    labels.sort(function (a, b) { return (b.fresh ? 1 : 0) - (a.fresh ? 1 : 0) || b.s.y - a.s.y; });
+    var labels = all.filter(function (it) { return MAJOR[it.s.n]; });
+    labels.sort(function (a, b) { return b.s.y - a.s.y; });
     var boxes = [];
     for (var n = 0; n < labels.length; n++) {
       var it = labels[n];
@@ -187,11 +229,11 @@
       lab.setAttribute('x', lx.toFixed(1));
       lab.setAttribute('y', ly.toFixed(1));
       lab.setAttribute('font-size', String(FS));
-      lab.setAttribute('fill', it.fresh ? '#1f1409' : '#4a382a');
+      lab.setAttribute('fill', '#3a2a1c');
       lab.setAttribute('paint-order', 'stroke');
       lab.setAttribute('stroke', 'rgba(255,252,244,.92)');
       lab.setAttribute('stroke-width', '0.8');
-      lab.setAttribute('class', it.fresh ? 'rail-label is-new' : 'rail-label');
+      lab.setAttribute('class', 'rail-label');
       lab.textContent = name;
       STATE.group.appendChild(lab);
     }
