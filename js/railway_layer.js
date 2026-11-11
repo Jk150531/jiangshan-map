@@ -29,6 +29,7 @@
   };
   // 线路本身的通车年：车站自身的启用年常在整条线路通车之前（该站先由别的老线开办），
   // 若只按站年画线，会提前画出当时并不存在的线路。这里对「现代才建成的线路」加一道闸门。
+  var KEEP_GATE = { '京九铁路': 1 };
   var LINE_YEARS = {
     京九铁路: 1996,
     哈大客运专线: 2012,
@@ -75,37 +76,85 @@
     return y < 0 ? '公元前' + (-y) + '年' : y + '年';
   }
 
+  function gateFor(name, arr) {
+    var g0 = LINE_YEARS[name] || 0;
+    if (!g0) return 0;
+    if (KEEP_GATE[name]) return g0;
+    var mn = 3000;
+    for (var i = 0; i < arr.length; i++) if (arr[i].y < mn) mn = arr[i].y;
+    return mn < g0 ? 0 : g0;
+  }
+
   // 按线路分组，用主方向投影把同线各站排成有序折线（PCA 一维排序）
   function buildLines() {
     var groups = {};
     for (var i = 0; i < window.RAILWAY_STATIONS.length; i++) {
       var s = window.RAILWAY_STATIONS[i];
-      if (!s.l) continue;
-      if (!groups[s.l]) groups[s.l] = [];
-      groups[s.l].push(s);
+      var keys = [];
+      if (s.l) keys.push(s.l);
+      if (s.l2 && s.l2 !== s.l) keys.push(s.l2);
+      for (var q = 0; q < keys.length; q++) {
+        if (!groups[keys[q]]) groups[keys[q]] = [];
+        groups[keys[q]].push(s);
+      }
     }
     var out = [];
+    // 有些线路字段写的是后来才通车的那条线（如“胶济客运专线”“哈大客运专线”），
+    // 但组内站点本身是 1900 年代的老站；这类组不能套通车年闸门，否则整段历史线路会消失。
     for (var key in groups) {
       var arr = groups[key];
       if (arr.length < 2) continue;
+      // 排序用最近邻链：先从离组中心最远的那站起步，然后每次接最近的未访问站。
+      // 这样折线会顺着弯道走，不会像一维投影那样把弯道两侧的站排反（如漠河—塔河—加格达奇）。
       var sx = 0, sz = 0;
       for (var j = 0; j < arr.length; j++) { sx += arr[j].x; sz += arr[j].z; }
       sx /= arr.length; sz /= arr.length;
-      var cxx = 0, czz = 0, cxz = 0;
+      var start = arr[0], far = -1;
       for (var k = 0; k < arr.length; k++) {
-        var dx = arr[k].x - sx, dz = arr[k].z - sz;
-        cxx += dx * dx; czz += dz * dz; cxz += dx * dz;
+        var dx0 = arr[k].x - sx, dz0 = arr[k].z - sz;
+        var dd = dx0 * dx0 + dz0 * dz0;
+        if (dd > far) { far = dd; start = arr[k]; }
       }
-      cxx /= arr.length; czz /= arr.length; cxz /= arr.length;
-      var theta = 0.5 * Math.atan2(2 * cxz, cxx - czz);
-      var ux = Math.cos(theta), uz = Math.sin(theta);
-      var ordered = arr.map(function (s2) {
-        return { s: s2, t: (s2.x - sx) * ux + (s2.z - sz) * uz };
-      }).sort(function (a, b) { return a.t - b.t; });
-      out.push({ name: key, st: ordered });
+      var used = [start];
+      var rest = arr.filter(function (s3) { return s3 !== start; });
+      while (rest.length) {
+        var cur = used[used.length - 1], bi = 0, bn = 1e9;
+        for (var r2 = 0; r2 < rest.length; r2++) {
+          var ax = (rest[r2].x - cur.x) * 102.2, az = (rest[r2].z - cur.z) * 111.1;
+          var an = Math.sqrt(ax * ax + az * az);
+          if (an < bn) { bn = an; bi = r2; }
+        }
+        used.push(rest[bi]);
+        rest.splice(bi, 1);
+      }
+      var ordered = used.map(function (s4) { return { s: s4 }; });
+      out.push({ name: key, st: ordered, gate: gateFor(key, arr) });
     }
-    return out;
+    // 只有一站、却没法和同线其他站相连的站（多为支线端点或同城独立站）：
+    // 若 30 km 内还有别的站，就补一条虚线与路网接上，避免图上出现孤点。
+    var linked = {};
+    for (var m = 0; m < out.length; m++) {
+      for (var n2 = 0; n2 < out[m].st.length; n2++) linked[out[m].st[n2].s.n] = 1;
+    }
+    var spurs = [];
+    var all = window.RAILWAY_STATIONS;
+    for (var p = 0; p < all.length; p++) {
+      var host = all[p];
+      if (linked[host.n]) continue;
+      var best = null, bd = 1e9;
+      for (var r = 0; r < all.length; r++) {
+        var other = all[r];
+        if (other.n === host.n || !linked[other.n]) continue;
+        var dx2 = (other.x - host.x) * 102.2, dz2 = (other.z - host.z) * 111.1;
+        var d2 = Math.sqrt(dx2 * dx2 + dz2 * dz2);
+        if (d2 < bd) { bd = d2; best = other; }
+      }
+      if (best && bd <= 60) spurs.push({ a: host, b: best, y: Math.max(host.y, best.y), d: Math.round(bd) });
+    }
+    return { lines: out, spurs: spurs };
   }
+
+  try { window.__railBuildLines = buildLines; } catch (e) {}
 
   function hideHover() {
     if (STATE.hover && STATE.hover.parentNode) STATE.hover.parentNode.removeChild(STATE.hover);
@@ -143,9 +192,9 @@
     var all = [];
 
     // 1) 先画线：同年份或更早的相邻站连成一段，段色随较晚那站的开通年
-    for (var i = 0; i < STATE.lines.length; i++) {
-      var line = STATE.lines[i];
-      var gate = LINE_YEARS[line.name] || 0;
+    for (var i = 0; i < STATE.lines.lines.length; i++) {
+      var line = STATE.lines.lines[i];
+      var gate = line.gate;
       if (gate > year) continue;
       var pts = [];
       for (var j = 0; j < line.st.length; j++) {
@@ -170,6 +219,26 @@
         seg.setAttribute('class', 'rail-line');
         STATE.group.appendChild(seg);
       }
+    }
+
+    // 1b) 孤站接续：单站线路若 30 km 内有邻站，用虚线接上（示意该站接入路网）
+    for (var i2 = 0; i2 < STATE.lines.spurs.length; i2++) {
+      var sp = STATE.lines.spurs[i2];
+      if (sp.y > year) continue;
+      var pa = app.projector.toScreen(sp.a.x, sp.a.z);
+      var pb = app.projector.toScreen(sp.b.x, sp.b.z);
+      if (!pa || !pb || !isFinite(pa[0]) || !isFinite(pb[0])) continue;
+      var sp2 = document.createElementNS(NS, 'line');
+      sp2.setAttribute('x1', pa[0].toFixed(1));
+      sp2.setAttribute('y1', pa[1].toFixed(1));
+      sp2.setAttribute('x2', pb[0].toFixed(1));
+      sp2.setAttribute('y2', pb[1].toFixed(1));
+      sp2.setAttribute('stroke', colorFor(sp.y));
+      sp2.setAttribute('stroke-width', '0.8');
+      sp2.setAttribute('stroke-opacity', '0.5');
+      sp2.setAttribute('stroke-dasharray', '2,2');
+      sp2.setAttribute('class', 'rail-line is-spur');
+      STATE.group.appendChild(sp2);
     }
 
     // 2) 再画站点点位
