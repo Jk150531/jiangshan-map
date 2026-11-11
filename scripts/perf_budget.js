@@ -154,8 +154,16 @@ function main(argv) {
 
   if (args.includes('--check')) {
     if (!baseline || typeof baseline.maxSyncScriptsGzipBytes !== 'number') {
-      console.error(`✗ Missing or invalid ${BASELINE_PATH}; run \`node scripts/perf_budget.js --update\`.`);
-      return 1;
+      // 基线文件位于 data/（不入公开仓库），CI 上没有基线可对照，视为跳过而非失败；
+      // 需要严格模式时传 --strict，缺失基线即报错。
+      if (args.includes('--strict')) {
+        console.error(`✗ Missing or invalid ${BASELINE_PATH}; run \`node scripts/perf_budget.js --update\`.`);
+        return 1;
+      }
+      console.log(
+        `- Skipped perf budget check: ${BASELINE_PATH} not present (baseline lives under data/, not tracked here)`
+      );
+      return 0;
     }
     const errors = [];
     if (report.syncScriptsGzipBytes > baseline.maxSyncScriptsGzipBytes) {
