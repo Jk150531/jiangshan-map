@@ -1399,7 +1399,7 @@ async function runApiSearchSuite(ctx) {
     // 春秋尚无郡级政区（郡县制起于春秋晚期、行于战国），快照只含诸侯国面与地理区域，故不设郡数下限。
     const minPref = sk.startsWith('s_chunqiu')
       ? 0
-      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a2'
+      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a2' || sk === 's_zhanguo_p1' || sk === 's_zhanguo_p2'
         ? 3
         : sk === 's_zhanguo_b0' || sk === 's_zhanguo_b1'
           ? 6
@@ -1412,6 +1412,8 @@ async function runApiSearchSuite(ctx) {
     );
   }
   assert(
+    snapshots.s_zhanguo_p1.prefectures.length === 3 &&
+    snapshots.s_zhanguo_p2.prefectures.length === 3 &&
     snapshots.s_zhanguo_a.prefectures.length === 3 &&
       snapshots.s_zhanguo_a2.prefectures.length === 3 &&
       snapshots.s_zhanguo_b0.prefectures.length === 6 &&
@@ -1433,7 +1435,7 @@ async function runApiSearchSuite(ctx) {
     'Warring States, Qin, and Han snapshots must reflect chronological commandery (郡) progression including 薛郡'
   );
   // Regression guard: Early Warring States (-403..-317 BCE) only has 关中（内史）, 上郡, 上党郡; later commanderies appear at historical establishment phases
-  for (const earlyZgSnap of ['s_zhanguo_a', 's_zhanguo_a2']) {
+  for (const earlyZgSnap of ['s_zhanguo_p1', 's_zhanguo_p2', 's_zhanguo_a', 's_zhanguo_a2']) {
     for (const laterCmd of ['汉中郡', '蜀郡', '巴郡', '渔阳郡', '上谷郡', '代郡', '河东郡', '陇西郡', '南阳郡', '太原郡']) {
       assert(
         !snapshots[earlyZgSnap].prefectures.some((p) => p.title === laterCmd) &&
