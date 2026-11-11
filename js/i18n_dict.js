@@ -2279,7 +2279,7 @@ window.EN_LOCALE = {
     ],
     "wall_ming": [
       "Ming Great Wall",
-      "Brick-and-stone Nine Garrisons wall built across two centuries from Jiayuguan to Shanhai Pass."
+      "Brick-and-stone Nine Garrisons wall from Jiayuguan to Shanhai Pass; ceased as a defense work in 1644, masonry survives."
     ],
     "wall_ming_liaodong": [
       "Liaodong Wall",
@@ -2313,9 +2313,13 @@ window.EN_LOCALE = {
       "Sui–Tang Grand Canal · Yongji",
       ""
     ],
-    "canal_jinghang": [
-      "Beijing–Hangzhou Grand Canal",
-      "Re-routed straight through Shandong under Kublai Khan to Dadu (~1,800 km)."
+    "canal_jinghang_north": [
+      "Grand Canal · Northern Reach",
+      "Tonghui He and Huitong He from Dadu via Linqing and Jining to Huai'an. Cut off in 1855 when the Yellow River shifted and silted the Shandong channel."
+    ],
+    "canal_jinghang_south": [
+      "Grand Canal · Southern Reach",
+      "From Huai'an via Yangzhou and Zhenjiang to Hangzhou; still navigable today and carries the South-to-North Water Diversion eastern route."
     ],
     "sea_silk": [
       "Maritime Silk Road",
