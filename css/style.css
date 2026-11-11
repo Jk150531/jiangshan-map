@@ -5887,3 +5887,22 @@ button.story-inline-person:hover {
   background: rgba(214, 176, 112, 0.18);
   color: #d6b070;
 }
+
+/* ---- 铁路线路悬停：整线提亮 + 线路名浮标 ---- */
+.rail-line,
+.rail-hit {
+  pointer-events: none;
+}
+.rail-hit {
+  pointer-events: stroke;
+  stroke: #2b1b09;
+  stroke-opacity: 0;
+  stroke-linecap: round;
+}
+.rail-line.is-hot {
+  stroke-opacity: 0.95;
+  stroke-width: 2px;
+}
+.rail-line-tip {
+  pointer-events: none;
+}

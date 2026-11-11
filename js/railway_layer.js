@@ -62,7 +62,7 @@
     南疆铁路: 1984,
   };
   var NS = 'http://www.w3.org/2000/svg';
-  var STATE = { on: true, group: null, app: null, lastYear: null, lines: null, hover: null };
+  var STATE = { on: true, group: null, app: null, lastYear: null, lines: null, hover: null, lineTip: null, lineEls: null, hotEls: null };
 
   function colorFor(year) {
     var c = DECADES[0][1];
@@ -181,9 +181,75 @@
     STATE.hover = lab;
   }
 
+  function hideLineTip() {
+    if (STATE.lineTip && STATE.lineTip.parentNode) STATE.lineTip.parentNode.removeChild(STATE.lineTip);
+    STATE.lineTip = null;
+  }
+
+  function clearLineHot() {
+    if (!STATE.hotEls) return;
+    for (var i = 0; i < STATE.hotEls.length; i++) STATE.hotEls[i].classList.remove('is-hot');
+    STATE.hotEls = null;
+  }
+
+  // 鼠标悬停线路段：整条同名线路加粗提亮 + 线段中点浮出线路名
+  function highlightLine(name) {
+    clearLineHot();
+    var els = (STATE.lineEls && STATE.lineEls[name]) || [];
+    for (var i = 0; i < els.length; i++) els[i].classList.add('is-hot');
+    STATE.hotEls = els;
+  }
+
+  function showLineTip(txt, x, y) {
+    hideLineTip();
+    if (!STATE.group) return;
+    var lab = document.createElementNS(NS, 'text');
+    lab.setAttribute('x', x.toFixed(1));
+    lab.setAttribute('y', (y - 3.4).toFixed(1));
+    lab.setAttribute('text-anchor', 'middle');
+    lab.setAttribute('font-size', '3.6');
+    lab.setAttribute('fill', '#1f1409');
+    lab.setAttribute('paint-order', 'stroke');
+    lab.setAttribute('stroke', 'rgba(255,252,244,.95)');
+    lab.setAttribute('stroke-width', '0.9');
+    lab.setAttribute('class', 'rail-label rail-line-tip');
+    lab.textContent = txt;
+    STATE.group.appendChild(lab);
+    STATE.lineTip = lab;
+  }
+
+  // 透明的加宽命中线：让 0.9 宽的线段也有 4.5 宽的可悬停范围
+  function addLineHit(name, ax, ay, bx, by) {
+    if (!STATE.group) return;
+    if (!STATE.lineEls[name]) STATE.lineEls[name] = [];
+    var mx = (parseFloat(ax) + parseFloat(bx)) / 2;
+    var my = (parseFloat(ay) + parseFloat(by)) / 2;
+    var hit = document.createElementNS(NS, 'line');
+    hit.setAttribute('x1', ax);
+    hit.setAttribute('y1', ay);
+    hit.setAttribute('x2', bx);
+    hit.setAttribute('y2', by);
+    hit.setAttribute('stroke-width', '4.5');
+    hit.setAttribute('class', 'rail-hit');
+    hit.setAttribute('data-line', name);
+    hit.addEventListener('mouseenter', function () {
+      highlightLine(name);
+      showLineTip(name, mx, my);
+    });
+    hit.addEventListener('mouseleave', function () {
+      clearLineHot();
+      hideLineTip();
+    });
+    STATE.group.appendChild(hit);
+    STATE.lineEls[name].push(hit);
+  }
+
   function render(app) {
     if (!STATE.group) return;
     hideHover();
+    hideLineTip();
+    STATE.lineEls = {};
+    STATE.hotEls = null;
     while (STATE.group.firstChild) STATE.group.removeChild(STATE.group.firstChild);
     if (!STATE.on) return;
     if (!STATE.lines) STATE.lines = buildLines();
@@ -218,7 +284,11 @@
         seg.setAttribute('stroke-opacity', Math.max(a.y, b.y) === year ? '0.85' : '0.45');
         seg.setAttribute('stroke-linecap', 'round');
         seg.setAttribute('class', 'rail-line');
+        seg.setAttribute('data-line', line.name);
         STATE.group.appendChild(seg);
+        if (!STATE.lineEls[line.name]) STATE.lineEls[line.name] = [];
+        STATE.lineEls[line.name].push(seg);
+        addLineHit(line.name, seg.getAttribute('x1'), seg.getAttribute('y1'), seg.getAttribute('x2'), seg.getAttribute('y2'));
       }
     }
 
@@ -239,7 +309,9 @@
       sp2.setAttribute('stroke-opacity', '0.5');
       sp2.setAttribute('stroke-dasharray', '2,2');
       sp2.setAttribute('class', 'rail-line is-spur');
+      sp2.setAttribute('data-line', '接续：' + sp.a.n + '—' + sp.b.n);
       STATE.group.appendChild(sp2);
+      addLineHit('接续：' + sp.a.n + '—' + sp.b.n, sp2.getAttribute('x1'), sp2.getAttribute('y1'), sp2.getAttribute('x2'), sp2.getAttribute('y2'));
     }
 
     // 2) 再画站点点位
