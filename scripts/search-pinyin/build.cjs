@@ -20,6 +20,11 @@ customPinyin({
   大宛: 'dà yuān',
   高句丽: 'gāo gōu lí',
   㚟: 'chuò',
+  // 㦕 (U+3995) is a Korean-made hanja for 燕山君's personal name 이융 (Yi Yung);
+  // Unihan gives no Mandarin reading, so the phrase is pinned to the Korean reading.
+  李㦕: 'lǐ yóng',
+  // 㸁 (U+3E01) 为「熯」的讹体，汉典注音 hǎn / hàn；明代藏书家祁承㸁据此读 hàn。
+  祁承㸁: 'qí chéng hàn',
   // Historical names follow the readings in the atlas's English event data.
   郢都: 'yǐng dū',
   尉迟迥: 'yù chí jiǒng',
