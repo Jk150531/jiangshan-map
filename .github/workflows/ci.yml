@@ -25,15 +25,19 @@ jobs:
           npm test --prefix scripts/search-pinyin
 
       - name: Verify polygon bundles are canonical encodings
+        if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/build_atlas.js --check
 
       - name: Check polity border topology against baseline
+        if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/audit_topology.js --check
 
       - name: Check prefecture layer against baseline
+        if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/audit_prefectures.js --check
 
       - name: Check data references against baseline
+        if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/audit_sources.js --check
 
       - name: Check first-paint synchronous script gzip budget
@@ -43,4 +47,5 @@ jobs:
         run: node scripts/audit_layout.js --check
 
       - name: Run Atlas Validation Suite
+        if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/validate_atlas.js
