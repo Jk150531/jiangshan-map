@@ -903,7 +903,7 @@ window.ATLAS_LORE_DATA = Object.assign(window.ATLAS_LORE_DATA || {}, {
     {"key":"linzexu","zh":"林则徐","en":"Lin Zexu","courtesyZh":"林文忠公 · 字元抚 · 虎门销烟","courtesyEn":"Imperial Commissioner","dynastyKey":"qing","span":[1785,1850],"aliases":["林元抚","林少穆","林文忠公"],"evCount":5},
     {"key":"zengguofan","zh":"曾国藩","en":"Zeng Guofan","courtesyZh":"曾文正公 · 字伯涵 · 湘军统帅","courtesyEn":"Statesman & Founder of Hunan Army","dynastyKey":"qing","span":[1811,1872],"aliases":["曾伯涵","曾涤生","曾文正公"],"evCount":5},
     {"key":"zuozongtang","zh":"左宗棠","en":"Zuo Zongtang","courtesyZh":"左文襄公 · 字季高 · 收复新疆","courtesyEn":"Statesman & Recoverer of Xinjiang","dynastyKey":"qing","span":[1812,1885],"aliases":["左季高","左文襄公"],"evCount":8},
-    {"key":"sunzhongshan","zh":"孙中山","en":"Sun Yat-sen","courtesyZh":"孙文 · 字逸仙 · 近代民主革命先行者","courtesyEn":"Founder of the Republic of China","dynastyKey":"roc","span":[1866,1925],"aliases":["孙文","孙逸仙","中山先生"],"evCount":5},
+    {"key":"sunzhongshan","zh":"孙中山","en":"Sun Yat-sen","courtesyZh":"孙文 · 字逸仙 · 近代民主革命先行者","courtesyEn":"Founder of the Republic of China","dynastyKey":"roc","span":[1866,1925],"aliases":["孙文","孙逸仙","中山先生"],"evCount":10},
     {"key":"jiangjieshi","zh":"蒋介石","en":"Chiang Kai-shek","courtesyZh":"蒋中正 · 北伐与抗战统帅","courtesyEn":"Chiang Chung-cheng","dynastyKey":"roc","span":[1887,1975],"aliases":["蒋中正"],"evCount":6},
     {"key":"maozedong","zh":"毛泽东","en":"Mao Zedong","courtesyZh":"字润之 · 中华人民共和国主要缔造者","courtesyEn":"Founding Leader of the PRC","dynastyKey":"prc","span":[1893,1976],"aliases":["毛润之","润之"],"evCount":6},
     {"key":"dengxiaoping","zh":"邓小平","en":"Deng Xiaoping","courtesyZh":"改革开放总设计师","courtesyEn":"Architect of Reform & Opening-Up","dynastyKey":"prc","span":[1904,1997],"aliases":["邓希贤"],"evCount":6},
