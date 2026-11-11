@@ -271,7 +271,15 @@ function verifyViewportStates(label, width, height, states) {
 
 function main() {
   const chromeBin = findChromeBinary();
-  assert(chromeBin, 'Could not locate headless Chrome/Chromium binary for layout geometry audit');
+  if (!chromeBin) {
+    // 无头浏览器只在本机可用；CI 的裸 runner 上没有 Chrome，此时按"跳过"而非失败处理。
+    // 本地要强制校验时加 --strict。
+    if (process.argv.includes('--strict')) {
+      assert(chromeBin, 'Could not locate headless Chrome/Chromium binary for layout geometry audit');
+    }
+    console.log('- Skipped layout audit: no headless Chrome/Chromium binary found (use --strict to enforce)');
+    return;
+  }
   const tmpHtmlPath = createProbeHtml(ROOT);
   const t0 = Date.now();
   try {
