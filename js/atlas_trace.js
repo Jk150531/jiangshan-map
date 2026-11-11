@@ -2110,6 +2110,65 @@
         }
       }
 
+      const relEl = this._id('genealogy-rel');
+      if (relEl) {
+        const graph = window.PERSON_GRAPH;
+        const lookupName = (key) => {
+          const list = (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.PERSON_PROFILES) || [];
+          const p = list.find((q) => q && q.key === key);
+          if (!p) return key;
+          return isEn ? p.en || p.zh : (this.locale === 'zh-tw' && window.ZhHant ? window.ZhHant.toHant(p.zh) : p.zh);
+        };
+        if (isMulti || isAdhoc || !graph || !profile.key) {
+          relEl.innerHTML = '';
+          relEl.classList.add('is-hidden');
+        } else {
+          const rels = graph.relations(profile.key);
+          const relTxt = rels
+            .filter((r) => r.key)
+            .map(
+              (r) =>
+                `<button type="button" class="rel-chip" data-rel-key="${escHtml(r.key)}" title="${escHtml(
+                  r.note || ''
+                )}${r.src ? ' · ' + escHtml(r.src) : ''}"><span class="rel-type">${escHtml(r.type)}</span>${escHtml(
+                  lookupName(r.key)
+                )}</button>`
+            )
+            .join('');
+          const near = graph
+            .coLocated(profile.key, 8)
+            .map(
+              (c) =>
+                `<button type="button" class="rel-chip is-near" data-rel-key="${escHtml(c.key)}" title="${escHtml(
+                  (c.site || '') + ' · ' + (c.y || '')
+                )}"><span class="rel-type">同期同地</span>${escHtml(lookupName(c.key))}</button>`
+            )
+            .join('');
+          if (!relTxt && !near) {
+            relEl.innerHTML = '';
+            relEl.classList.add('is-hidden');
+          } else {
+            const head =
+              `<div class="pass-lore-head"><span class="pass-lore-badge">` +
+              (isEn ? 'Relations' : '人物关系') +
+              `</span><span class="pass-lore-range">` +
+              (isEn ? `${rels.length} recorded ties` : `${rels.length} 条正史关系`) +
+              `</span></div>`;
+            relEl.innerHTML =
+              head +
+              (relTxt ? `<div class="rel-row">${relTxt}</div>` : '') +
+              (near ? `<div class="rel-row is-near-row">${near}</div>` : '');
+            relEl.classList.remove('is-hidden');
+            relEl.querySelectorAll('.rel-chip').forEach((btn) => {
+              btn.addEventListener('click', () => {
+                const k = btn.dataset.relKey;
+                if (k) this.openPersonChronicle(k, -1);
+              });
+            });
+          }
+        }
+      }
+
       const dynCount = new Set(events.map((e) => e.dynasty.key)).size;
       const subEl = this._id('genealogy-sub');
       if (subEl) {

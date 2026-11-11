@@ -5837,3 +5837,53 @@ button.story-inline-person:hover {
   background: rgba(181, 56, 38, 0.09);
   text-decoration-color: #b53826;
 }
+
+/* 人物关系条（genealogy-rel） */
+.genealogy-rel {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.genealogy-rel.is-hidden {
+  display: none;
+}
+.rel-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.rel-row.is-near-row {
+  margin-top: 6px;
+  opacity: 0.86;
+}
+.rel-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.rel-chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.rel-chip.is-near {
+  border-style: dashed;
+  opacity: 0.9;
+}
+.rel-type {
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: rgba(214, 176, 112, 0.18);
+  color: #d6b070;
+}
