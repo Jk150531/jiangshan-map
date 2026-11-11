@@ -57,7 +57,7 @@
     海南西环高速铁路: 2015,
     临策铁路: 2009,
     京通铁路: 1977,
-    内昆铁路: 2002,
+    内昆铁路: 1958,
     集通铁路: 1995,
     南疆铁路: 1984,
   };
@@ -93,6 +93,7 @@
       var keys = [];
       if (s.l) keys.push(s.l);
       if (s.l2 && s.l2 !== s.l) keys.push(s.l2);
+      if (s.l3 && s.l3 !== s.l && keys.indexOf(s.l3) < 0) keys.push(s.l3);
       for (var q = 0; q < keys.length; q++) {
         if (!groups[keys[q]]) groups[keys[q]] = [];
         groups[keys[q]].push(s);
