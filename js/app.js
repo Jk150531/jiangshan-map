@@ -1324,7 +1324,7 @@
     }
 
     static get CHINESE_ERA_SPANS() {
-      return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.CHINESE_ERA_SPANS) || [[-403, '周威烈王', 23]];
+      return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.CHINESE_ERA_SPANS) || [[-770, '周平王', 51]];
     }
 
     static get REGIONAL_ERA_TRACKS() {
@@ -5734,11 +5734,11 @@
       const isEn = this.locale === 'en';
       const cur = this.dynasties && this.dynasties[this.dynastyIdx];
       let pageTitle = isEn
-        ? this.uiStr('title', 'Jiangshan Atlas · Interactive Historical Atlas of China (403 BCE – Present)')
-        : '江山时序 · 中国历史地图时间轴（战国至现代历代疆域、州郡政区与古今地名沿革）';
+        ? this.uiStr('title', 'Jiangshan Atlas · Interactive Historical Atlas of China (770 BCE – Present)')
+        : '江山时序 · 中国历史地图时间轴（春秋至现代历代疆域、州郡政区与古今地名沿革）';
       let pageDesc = isEn
-        ? 'Explore 2,400+ years of Chinese history from the Warring States (403 BCE) to the present across 18 eras, 185 multi-stage territory snapshots, 471 milestones, 571 city landmarks, 20 strategic passes, and 113+ person chronicles.'
-        : '交互式中国历史地图时间轴（公元前403年战国三家分晋至现代）：浏览18个朝代、185幅多阶段历史疆域与州道政区快照、471条编年大事、571处城池地标、20座天下名关与百余位青史人物行迹。';
+        ? 'Explore 2,700+ years of Chinese history from the Spring and Autumn period (770 BCE) to the present across 19 eras, 204 multi-stage territory snapshots, 570 milestones, 1,800+ city landmarks, 20 strategic passes, and 113+ person chronicles.'
+        : '交互式中国历史地图时间轴（公元前770年平王东迁至现代）：浏览19个朝代、204幅多阶段历史疆域与州道政区快照、570条编年大事、1806处城池地标、20座天下名关与百余位青史人物行迹。';
       let canonicalUrl = baseSiteUrl;
 
       if (this.activePerson) {
@@ -5847,8 +5847,8 @@
         })
         .join('');
       nav.innerHTML =
-        `<h2>Jiangshan Atlas: Historical Maps of China, Prefectures, Ancient &amp; Modern Place Names, and Major Events (403 BCE – Present)</h2>` +
-        `<p>Interactive timeline atlas of Chinese history across 18 major eras—Warring States, Qin, Western Han, Eastern Han, Three Kingdoms, Western Jin, Eastern Jin &amp; Sixteen Kingdoms, Northern &amp; Southern Dynasties, Sui, Tang, Five Dynasties &amp; Ten Kingdoms, Northern Song (Liao &amp; Western Xia), Southern Song (Jin &amp; Mongol), Yuan, Ming, Qing, Republic of China, and People's Republic of China.</p>` +
+        `<h2>Jiangshan Atlas: Historical Maps of China, Prefectures, Ancient &amp; Modern Place Names, and Major Events (770 BCE – Present)</h2>` +
+        `<p>Interactive timeline atlas of Chinese history across 19 major eras—Spring and Autumn, Warring States, Qin, Western Han, Eastern Han, Three Kingdoms, Western Jin, Eastern Jin &amp; Sixteen Kingdoms, Northern &amp; Southern Dynasties, Sui, Tang, Five Dynasties &amp; Ten Kingdoms, Northern Song (Liao &amp; Western Xia), Southern Song (Jin &amp; Mongol), Yuan, Ming, Qing, Republic of China, and People's Republic of China.</p>` +
         `<section><h3>1. Historical Dynasties &amp; Territories Directory</h3><ul>${dynItems}</ul></section>` +
         `<section><h3>2. Person Chronicles &amp; Life Routes</h3><ul>${journeyItems}</ul></section>` +
         `<section><h3>3. 20 Strategic Mountain &amp; River Passes</h3><ul>${passItems}</ul></section>`;

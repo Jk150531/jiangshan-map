@@ -53,6 +53,12 @@ window.EN_LOCALE = {
     "now_prov": "Today: "
   },
   "dynasties": {
+    "chunqiu": {
+      "name": "Spring and Autumn",
+      "short": "Spring & Autumn",
+      "capital": "Luoyi (Zhou) · Jiang (Jin) · Ying (Chu) · Linzi (Qi)",
+      "desc": "In 770 BCE King Ping moved the Zhou capital east to Luoyi and Lord Xiang of Qin was first enfeoffed as a feudal lord; royal authority shrank and the feudal states rose — the Spring and Autumn period. Duke Huan of Qi led the states under ‘revere the king, expel the barbarians’; Duke Wen of Jin defeated Chu at Chengpu and took over the hegemony; Duke Mu of Qin absorbed the Rong in the west; King Zhuang of Chu asked the weight of the Zhou tripods. Jin–Chu rivalry ran for two centuries, followed by the Xiang Xu peace conference and the rise of Wu and Yue: Wu sacked Ying in 506 BCE and Yue destroyed Wu in 473 BCE (this era ends in 476 BCE). Confucius, Laozi, Guan Zhong, Zichan and Sun Wu all lived in this period (drag across six stages)."
+    },
     "zhanguo": {
       "name": "Warring States",
       "short": "Warring States",
@@ -163,6 +169,186 @@ window.EN_LOCALE = {
     }
   },
   "milestones": {
+    "chunqiu:-770": [
+      "King Ping moves the Zhou capital east to Luoyi; Lord Xiang of Qin enfeoffed",
+      "Luoyi · Haojing"
+    ],
+    "chunqiu:-767": [
+      "Duke Wu of Zheng annexes Kuai and moves the Zheng capital to Xinzheng",
+      "Xinzheng"
+    ],
+    "chunqiu:-743": [
+      "Duke Zhuang of Zheng takes power and Zheng begins to grow strong",
+      "Xinzheng"
+    ],
+    "chunqiu:-722": [
+      "The Chunqiu annals begin recording in the first year of Duke Yin of Lu",
+      "Qufu"
+    ],
+    "chunqiu:-720": [
+      "King Ping of Zhou dies and King Huan succeeds to the royal throne",
+      "Luoyi"
+    ],
+    "chunqiu:-719": [
+      "Zhouyu of Wei murders Duke Huan and seizes power; Shi Que has him killed",
+      "Puyang"
+    ],
+    "chunqiu:-707": [
+      "Battle of Xuge: a Zheng archer wounds King Huan of Zhou in the shoulder",
+      "Xuge"
+    ],
+    "chunqiu:-701": [
+      "Duke Zhuang of Zheng dies and his sons fight over the succession",
+      "Xinzheng"
+    ],
+    "chunqiu:-685": [
+      "Duke Huan of Qi accedes and appoints Guan Zhong as chief minister",
+      "Linzi"
+    ],
+    "chunqiu:-684": [
+      "Battle of Changshao: Cao Gui defeats the invading Qi army",
+      "Changshao"
+    ],
+    "chunqiu:-681": [
+      "Duke Huan of Qi convenes the lords at Juand and becomes the first hegemon",
+      "Juan"
+    ],
+    "chunqiu:-664": [
+      "Duke Huan of Qi campaigns against the Mountain Rong and rescues Yan",
+      "Ji"
+    ],
+    "chunqiu:-661": [
+      "Duke Xian of Jin annexes the small states of Geng, Huo and Wei",
+      "Jiang · Wei"
+    ],
+    "chunqiu:-656": [
+      "Duke Huan of Qi invades Chu and concludes the covenant of Zhaoling",
+      "Zhaoling"
+    ],
+    "chunqiu:-655": [
+      "Jin borrows passage through Yu to destroy Guo, then annexes Yu as well",
+      "Xiaohan · Pinglu"
+    ],
+    "chunqiu:-651": [
+      "The Kuiqiu conference marks the height of Duke Huan of Qi hegemony",
+      "Kuiqiu"
+    ],
+    "chunqiu:-645": [
+      "Battle of Hanyuan: Duke Mu of Qin captures Duke Hui of Jin",
+      "Hanyuan"
+    ],
+    "chunqiu:-643": [
+      "Duke Huan of Qi dies and five of his sons contend for the throne",
+      "Linzi"
+    ],
+    "chunqiu:-638": [
+      "Battle of the Hong River: Duke Xiang of Song is defeated by Chu",
+      "Hong River"
+    ],
+    "chunqiu:-636": [
+      "Duke Wen of Jin, Chonger, returns from exile and takes the throne",
+      "Jiang"
+    ],
+    "chunqiu:-632": [
+      "Battle of Chengpu: Jin defeats Chu, followed by the Jiantu covenant",
+      "Chengpu · Jiantu"
+    ],
+    "chunqiu:-630": [
+      "Qin and Jin besiege Zheng; Zhuzhi Wu persuades the Qin army to withdraw",
+      "Xinzheng"
+    ],
+    "chunqiu:-627": [
+      "Battle of Yao: the Qin army is annihilated by Jin at the Yao pass",
+      "Yao"
+    ],
+    "chunqiu:-623": [
+      "Duke Mu of Qin subdues the Western Rong and opens a thousand li of land",
+      "Yong"
+    ],
+    "chunqiu:-613": [
+      "King Zhuang of Chu accedes and begins to revive Chu power",
+      "Ying"
+    ],
+    "chunqiu:-606": [
+      "King Zhuang of Chu asks the weight of the Zhou ritual tripods",
+      "Luoyi"
+    ],
+    "chunqiu:-597": [
+      "Battle of Bi: Chu defeats Jin and King Zhuang becomes hegemon",
+      "Bi"
+    ],
+    "chunqiu:-589": [
+      "Battle of An: the Jin army defeats Qi on the plain of An",
+      "An"
+    ],
+    "chunqiu:-584": [
+      "Shen Gong Wu Chen is sent to Wu, opening Wu to Jin influence",
+      "Gusu"
+    ],
+    "chunqiu:-575": [
+      "Battle of Yanling: Duke Li of Jin defeats the Chu army",
+      "Yanling"
+    ],
+    "chunqiu:-563": [
+      "Duke Dao of Jin restores hegemony by exhausting Chu in three campaigns",
+      "Jiang"
+    ],
+    "chunqiu:-551": [
+      "Confucius is born in the state of Lu, at Qufu",
+      "Qufu"
+    ],
+    "chunqiu:-548": [
+      "Cui Zhu assassinates Duke Zhuang of Qi and seizes the government",
+      "Linzi"
+    ],
+    "chunqiu:-546": [
+      "The Xiang Xu peace conference divides hegemony between Jin and Chu",
+      "Shangqiu"
+    ],
+    "chunqiu:-536": [
+      "Zichan, chief minister of Zheng, casts the penal code on bronze",
+      "Xinzheng"
+    ],
+    "chunqiu:-522": [
+      "Zichan, architect of Zheng recovery, dies at Xinzheng",
+      "Xinzheng"
+    ],
+    "chunqiu:-520": [
+      "King Jing of Zhou dies and the rebellion of Prince Chao breaks out",
+      "Luoyi"
+    ],
+    "chunqiu:-514": [
+      "King Helu of Wu accedes, employing Wu Zixu and the strategist Sun Wu",
+      "Gusu"
+    ],
+    "chunqiu:-506": [
+      "Battle of Boju: the Wu army captures Ying, capital of Chu",
+      "Boju · Ying"
+    ],
+    "chunqiu:-496": [
+      "Battle of Zuili: Yue defeats Wu and King Helu dies of his wound",
+      "Zuili"
+    ],
+    "chunqiu:-494": [
+      "Battle of Fujiao: Goujian of Yue is besieged on Mount Kuaiji",
+      "Fujiao · Kuaiji"
+    ],
+    "chunqiu:-482": [
+      "The Huangchi conference: King Fuchai of Wu contends for hegemony",
+      "Huangchi"
+    ],
+    "chunqiu:-479": [
+      "Chu annexes the state of Chen; Confucius dies at Qufu",
+      "Wanqiu · Qufu"
+    ],
+    "chunqiu:-478": [
+      "Battle of Lize: the Yue army defeats Wu for a second time",
+      "Lize"
+    ],
+    "chunqiu:-476": [
+      "Spring and Autumn ends: King Jing of Zhou dies and King Yuan succeeds",
+      "Luoyi"
+    ],
     "qin:-221": [
       "Wang Ben takes Qi's surrender; First Emperor unifies China with commanderies and one script",
       "Xianyang"
@@ -2335,6 +2521,123 @@ window.EN_LOCALE = {
     ]
   },
   "dict": {
+    "春秋前期（前770 — 前722 · 平王东迁与郑庄小霸）": "Early Spring and Autumn (770 – 722 BCE · King Ping's eastward move and Duke Zhuang of Zheng)",
+    "前770年周平王东迁洛邑，周室王畿缩小、共主地位开始动摇；秦襄公因护送有功始列为诸侯。郑、卫、鲁、宋等畿内与中原诸侯活跃，郑庄公一度挟天子以令诸侯。此期楚、吴、越尚局促于江汉与东南，晋、齐、秦仍是区域性邦国。": "In 770 BCE King Ping of Zhou moved the capital east to Luoyi; the royal domain shrank and Zhou's authority as overlord began to erode. Lord Xiang of Qin, for escorting the king, was first enfeoffed as a feudal lord. Zheng, Wey, Lu and Song were active in the central plains, and Duke Zhuang of Zheng briefly used the king's name to command the lords. Chu, Wu and Yue were still confined to the Jiang-Han region and the southeast, while Jin, Qi and Qin remained regional states.",
+    "春秋前期（前720 — 前682 · 齐桓公始霸）": "Early Spring and Autumn (720 – 682 BCE · Duke Huan of Qi becomes the first hegemon)",
+    "齐桓公任用管仲改革内政、军政合一，国力上升；前681年盟诸侯于鄄，成为春秋首霸，并北救燕、南遏楚，以“尊王攘夷”号令中原。郑国在庄公之后内乱转衰，晋、秦尚未出关。": "Duke Huan of Qi appointed Guan Zhong to reform internal government and fuse civil and military administration, and Qi grew stronger. In 681 BCE he convened the lords at Juan and became the first hegemon of the Spring and Autumn, rescuing Yan in the north and checking Chu in the south under the slogan of upholding the king and repelling the barbarians. Zheng declined amid internal strife after Duke Zhuang, and Jin and Qin had not yet pushed out of their own gates.",
+    "春秋中期（前680 — 前642 · 晋文秦穆与齐桓之终）": "Middle Spring and Autumn (680 – 642 BCE · Duke Wen of Jin, Duke Mu of Qin and the end of Duke Huan's day)",
+    "晋献公时期大肆扩张，前655年假道灭虢、灭虞，据有河东与河内通道；秦穆公东向与晋争河西，前645年韩原之战俘晋惠公。齐桓公仍在，但霸权由齐向晋转移。": "Duke Xian of Jin expanded aggressively; in 655 BCE he borrowed passage to destroy Guo and annexed Yu, seizing the Hedong and Henei corridors. Duke Mu of Qin moved east and contended with Jin over the west bank of the Yellow River, capturing Duke Hui of Jin at Hanyuan in 645 BCE. Duke Huan of Qi was still alive, but hegemony was shifting from Qi to Jin.",
+    "春秋中期（前640 — 前602 · 晋楚争霸与楚庄问鼎）": "Middle Spring and Autumn (640 – 602 BCE · Jin-Chu rivalry and King Zhuang of Chu's question of the tripods)",
+    "晋文公城濮败楚、践土会盟后成为霸主；楚庄王灭江汉诸国、陈兵中原，前606年问鼎洛邑，前597年邲之战大败晋军，楚国势力北抵黄河以南，晋楚两极格局成形。": "Duke Wen of Jin defeated Chu at Chengpu and became hegemon after the Jiantu covenant. King Zhuang of Chu annexed the states of the Jiang-Han region and deployed troops into the central plains, asking the weight of the Zhou tripods at Luoyi in 606 BCE and crushing the Jin army at Bi in 597 BCE; Chu power reached the south bank of the Yellow River and a bipolar Jin-Chu order took shape.",
+    "春秋后期（前600 — 前548 · 弭兵与吴国兴起）": "Late Spring and Autumn (600 – 548 BCE · peace conferences and the rise of Wu)",
+    "晋楚长期拉锯，中原小国疲于供职；前584年晋使申公巫臣通吴，教吴乘车用兵，吴国开始自东南牵制楚。前575年鄢陵之战晋再胜楚，此后两国均无力独霸。": "Jin and Chu wore each other down over decades, and the small states of the central plains were exhausted by serving both. In 584 BCE Jin sent Shen Gong Wu Chen to Wu and taught Wu chariot warfare, and Wu began to pin down Chu from the southeast. Jin defeated Chu again at Yanling in 575 BCE, after which neither state could dominate alone.",
+    "春秋末期（前547 — 前476 · 弭兵、吴越与春秋之终）": "End of Spring and Autumn (547 – 476 BCE · peace, Wu and Yue, and the close of the era)",
+    "前546年向戌弭兵之会，晋楚及中原诸侯共盟，小国“两事晋楚”。随后吴王阖闾用伍子胥、孙武，前506年柏举之战入郢破楚；越王勾践先败后胜，前473年灭吴（此期结束于前476，吴尚未亡，越已尽有浙东并西向争衡）。前479年楚灭陈。": "In 546 BCE the Xiang Xu peace conference bound Jin, Chu and the central plains lords, with the small states serving both. King Helu of Wu then employed Wu Zixu and Sun Wu and entered Ying, the Chu capital, at Boju in 506 BCE. Goujian of Yue lost first and won later, destroying Wu in 473 BCE (this phase ends in 476 BCE, with Wu still standing and Yue already holding eastern Zhejiang and contending westward). Chu annexed Chen in 479 BCE.",
+    "周王室东迁之都（成周）": "Capital of the Eastern Zhou after the royal house moved east (Chengzhou)",
+    "镐京": "Haojing",
+    "西安 · 沣东": "Xi'an · Fengdong",
+    "西周旧都，前771年为犬戎所破": "Former Western Zhou capital, sacked by the Quanrong in 771 BCE",
+    "绛": "Jiang",
+    "临汾 · 侯马": "Linfen · Houma",
+    "晋国后期都城（新田）": "Late Jin capital at Xintian",
+    "曲沃": "Quwo",
+    "临汾 · 曲沃": "Linfen · Quwo",
+    "晋公族曲沃支邑，代翼而立": "Branch fief of the Jin ducal clan that supplanted Yi",
+    "晋国早期都邑": "Early capital of the state of Jin",
+    "运城 · 夏县": "Yuncheng · Xiaxian",
+    "晋夏虚旧地，战国为魏都": "Old Xiaxu land of Jin, later the Wei capital in the Warring States",
+    "郢": "Ying",
+    "荆州 · 江陵": "Jingzhou · Jiangling",
+    "楚文王迁都于此": "King Wen of Chu moved the capital here",
+    "丹阳": "Danyang",
+    "南阳 · 淅川": "Nanyang · Xichuan",
+    "楚始封之都，丹淅之会": "First enfeoffed capital of Chu at the Dan-Xi confluence",
+    "淄博 · 临淄": "Zibo · Linzi",
+    "齐献公迁都，齐都六百余年": "Duke Xian of Qi moved the capital here; Qi capital for over 600 years",
+    "雍": "Yong",
+    "宝鸡 · 凤翔": "Baoji · Fengxiang",
+    "秦德公迁雍，秦都近三百年": "Duke De of Qin moved to Yong; Qin capital for nearly 300 years",
+    "西垂": "Xichui",
+    "天水 · 礼县": "Tianshui · Lixian",
+    "秦人西垂故地": "Old homeland of the Qin at Xichui",
+    "济宁 · 曲阜": "Jining · Qufu",
+    "鲁国都城，孔子故里": "Capital of Lu and hometown of Confucius",
+    "宋国都城（宋城）": "Capital of Song (Songcheng)",
+    "卫国后期都城（帝丘）": "Late capital of Wey at Diqiu",
+    "鹤壁 · 淇县": "Hebi · Qixian",
+    "卫国旧都": "Former capital of Wey",
+    "郑州 · 新郑": "Zhengzhou · Xinzheng",
+    "郑武公东迁之都": "Capital to which Duke Wu of Zheng moved east",
+    "荥泽": "Xingze",
+    "郑州 · 荥阳": "Zhengzhou · Xingyang",
+    "邲之战战场，荥泽之滨": "Battlefield of Bi on the banks of Xingze",
+    "姑苏": "Gusu",
+    "吴王阖闾所筑大城": "Great walled city built by King Helu of Wu",
+    "越国都城": "Capital of the state of Yue",
+    "宛丘": "Wanqiu",
+    "周口 · 淮阳": "Zhoukou · Huaiyang",
+    "陈国都城": "Capital of the state of Chen",
+    "上蔡": "Shangcai",
+    "驻马店 · 上蔡": "Zhumadian · Shangcai",
+    "蔡国都城": "Capital of the state of Cai",
+    "陶丘": "Taoqiu",
+    "菏泽 · 定陶": "Heze · Dingtao",
+    "曹国都城": "Capital of the state of Cao",
+    "巴国都邑": "Capital town of the state of Ba",
+    "蜀国都邑": "Capital town of the state of Shu",
+    "滁州 · 凤阳": "Chuzhou · Fengyang",
+    "吴楚拉锯之地": "Contested ground between Wu and Chu",
+    "巢": "Chao",
+    "合肥 · 巢湖": "Hefei · Chaohu",
+    "吴楚屡争之邑": "Town repeatedly fought over by Wu and Chu",
+    "葵丘": "Kuiqiu",
+    "商丘 · 民权": "Shangqiu · Minquan",
+    "齐桓公葵丘会盟处": "Site of the Kuiqiu covenant under Duke Huan of Qi",
+    "践土": "Jiantu",
+    "新乡 · 原阳": "Xinxiang · Yuanyang",
+    "晋文公践土之盟": "Covenant of Jiantu under Duke Wen of Jin",
+    "菏泽 · 鄄城": "Heze · Juancheng",
+    "晋楚城濮之战": "Battle of Chengpu between Jin and Chu",
+    "崤": "Yao",
+    "崤之战秦师覆没": "Battle of Yao, where the Qin army was destroyed",
+    "韩原": "Hanyuan",
+    "渭南 · 韩城": "Weinan · Hancheng",
+    "秦晋韩原之战": "Battle of Hanyuan between Qin and Jin",
+    "召陵": "Zhaoling",
+    "漯河 · 召陵": "Luohe · Zhaoling",
+    "齐桓公伐楚会盟处": "Site of the covenant after Duke Huan of Qi invaded Chu",
+    "泓水": "Hong River",
+    "商丘 · 柘城": "Shangqiu · Zhecheng",
+    "宋襄公败于楚": "Where Duke Xiang of Song was defeated by Chu",
+    "济南 · 莱芜": "Jinan · Laiwu",
+    "曹刿败齐处": "Where Cao Gui defeated the Qi army",
+    "繻葛": "Xuge",
+    "许昌 · 长葛": "Xuchang · Changge",
+    "郑射王肩处": "Where a Zheng archer wounded the Zhou king's shoulder",
+    "鄢陵": "Yanling",
+    "许昌 · 鄢陵": "Xuchang · Yanling",
+    "晋楚鄢陵之战": "Battle of Yanling between Jin and Chu",
+    "鞍": "An",
+    "晋齐鞍之战": "Battle of An between Jin and Qi",
+    "黄池": "Huangchi",
+    "新乡 · 封丘": "Xinxiang · Fengqiu",
+    "吴王夫差黄池会盟": "Huangchi covenant of King Fuchai of Wu",
+    "笠泽": "Lize",
+    "苏州 · 吴江": "Suzhou · Wujiang",
+    "越再败吴处": "Where Yue defeated Wu a second time",
+    "槜李": "Zuili",
+    "越败吴、阖闾伤卒处": "Where Yue defeated Wu and King Helu died of his wound",
+    "黄冈 · 麻城": "Huanggang · Macheng",
+    "吴师入郢之役": "Campaign in which the Wu army entered Ying",
+    "夫椒": "Fujiao",
+    "无锡 · 太湖": "Wuxi · Lake Tai",
+    "吴败越、勾践栖会稽": "Wu defeated Yue and Goujian held out at Kuaiji",
+    "虞": "Yu",
+    "运城 · 平陆": "Yuncheng · Pinglu",
+    "晋假道伐虢所灭": "Destroyed when Jin borrowed passage to attack Guo",
+    "虢": "Guo",
+    "三门峡 · 陕州": "Sanmenxia · Shanzhou",
+    "晋灭虢，扼崤函之险": "Jin annexed Guo and controlled the Yao-Han pass",
     "北京市": "Beijing",
     "天津市": "Tianjin",
     "河北省": "Hebei",
@@ -2431,6 +2734,11 @@ window.EN_LOCALE = {
     "乌兹别克斯坦": "Uzbekistan",
     "越南": "Vietnam",
     "秦": "Qin",
+    "郑": "Zheng",
+    "蔡": "Cai",
+    "曹": "Cao",
+    "河套": "Hetao (Ordos Loop)",
+    "淮上": "Huai River region",
     "汉": "Han",
     "汉（郡国并行）": "Han (Commanderies & Kingdoms)",
     "西汉": "Western Han",
@@ -2442,7 +2750,7 @@ window.EN_LOCALE = {
     "孙吴": "Eastern Wu",
     "东吴": "Eastern Wu",
     "杨吴": "Yang Wu",
-    "晋": "Western Jin",
+    "晋": "Jin",
     "西晋": "Western Jin",
     "东晋": "Eastern Jin",
     "汉赵（304 年起）": "Han-Zhao (from 304)",

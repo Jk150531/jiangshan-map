@@ -1050,7 +1050,7 @@ async function runSearchRuntimeSuite(ctx) {
             `Expected ${dKey} settlements to contain frontier anchor "${ancName}"`
           );
         }
-        const qufuZg = dynasties[0].settlements.find((s) => s.ancient === '曲阜');
+        const qufuZg = dynasties.find((d) => d.key === 'zhanguo').settlements.find((s) => s.ancient === '曲阜');
         assert(
           qufuZg && Array.isArray(qufuZg.capitalPeriods) && qufuZg.capitalPeriods[0][1] === -249,
           'Warring States Qufu must cap capitalPeriods at -249 BCE when Chu annexed Lu'
@@ -2158,7 +2158,7 @@ async function runSearchRuntimeSuite(ctx) {
             }
           }
         }
-        for (const bsKey of ['s_zhanguo_a', 's_qin_a']) {
+        for (const bsKey of ['s_chunqiu_a', 's_qin_a']) {
           for (const f of bootSnapshots[bsKey].polities || []) {
             assert(f.title !== '台湾原住民', `atlas_boot.js ${bsKey} still contains 台湾原住民`);
           }
@@ -2195,7 +2195,7 @@ async function runSearchRuntimeSuite(ctx) {
             let expPol = null;
             let expReg = [];
             let expPref = [];
-            if (/^s_(zhanguo|qin|xihan|donghan)(_|$)/.test(sk)) expPol = '岛夷诸部';
+            if (/^s_(chunqiu|zhanguo|qin|xihan|donghan)(_|$)/.test(sk)) expPol = '岛夷诸部';
             else if (/^s_(sanguo|xijin|dongjin|nanbei)(_|$)/.test(sk)) expPol = '夷洲';
             else if (/^s_(sui|tang|wudai|beisong|nansong)(_|$)/.test(sk)) expPol = '流求';
             else if (/^s_yuan(_|$)/.test(sk)) expPol = '瑠求';

@@ -203,7 +203,7 @@ async function runTraceGenealogySuite(ctx) {
   );
   assert(
     !String(ctrl.openGenealogyAt).includes("if (d.key === 'prc') continue;"),
-    'openGenealogyAt must not skip d.key === "prc" so Place Genealogy covers all 18 eras up to the present day'
+    'openGenealogyAt must not skip d.key === "prc" so Place Genealogy covers all 19 eras up to the present day'
   );
   const mockTimelineItems = [];
   const mockHeadingEl = { textContent: '' };
@@ -270,12 +270,12 @@ async function runTraceGenealogySuite(ctx) {
   ctrl._syncTracedPrefecture = () => {};
   ctrl._fullSnapshotsLoaded = true;
   ctrl.year = 2026;
-  ctrl.dynastyIdx = 17;
+  ctrl.dynastyIdx = 18;
   ctrl.openGenealogyAt(113.13, 29.36, null, { fromYearSync: true });
   assert.strictEqual(
     mockTimelineItems.length,
-    18,
-    `Expected openGenealogyAt to render all 18 dynasty rows including PRC, got ${mockTimelineItems.length}`
+    19,
+    `Expected openGenealogyAt to render all 19 dynasty rows including PRC, got ${mockTimelineItems.length}`
   );
   assert(
     !mockLoreEl.isHidden &&
@@ -283,9 +283,9 @@ async function runTraceGenealogySuite(ctx) {
       mockLoreEl.innerHTML.includes('洞庭湖口 · 江湖锁钥'),
     `Expected #genealogy-lore at Yueyang to render curated city lore banner, got ${mockLoreEl.innerHTML}`
   );
-  const tangRowHtml = mockTimelineItems[9].innerHTML;
-  const rocRowHtml = mockTimelineItems[16].innerHTML;
-  const prcRowHtml = mockTimelineItems[17].innerHTML;
+  const tangRowHtml = mockTimelineItems[10].innerHTML;
+  const rocRowHtml = mockTimelineItems[17].innerHTML;
+  const prcRowHtml = mockTimelineItems[18].innerHTML;
   assert(
     tangRowHtml.includes('邻近古城：岳州（即此地）') &&
       tangRowHtml.includes('开元四年张说谪守岳州，始建岳阳楼'),
@@ -302,16 +302,16 @@ async function runTraceGenealogySuite(ctx) {
     `Expected PRC row at Yueyang to display 湖南省 · 岳阳 and 现代城市：岳阳（即此地）, got ${prcRowHtml}`
   );
   ctrl.openGenealogyAt(112.24, 30.33, null, { fromYearSync: true });
-  assert.strictEqual(mockTimelineItems.length, 18, 'Expected 18 rows at Jingzhou (江陵)');
+  assert.strictEqual(mockTimelineItems.length, 19, 'Expected 19 rows at Jingzhou (江陵)');
   assert(
     !mockLoreEl.isHidden &&
       mockLoreEl.innerHTML.includes('名城形胜') &&
       mockLoreEl.innerHTML.includes('荆楚雄都 · 江汉锁钥'),
     `Expected #genealogy-lore at Jingzhou to render curated city lore banner, got ${mockLoreEl.innerHTML}`
   );
-  const jzQingHtml = mockTimelineItems[15].innerHTML;
-  const jzRocHtml = mockTimelineItems[16].innerHTML;
-  const jzPrcHtml = mockTimelineItems[17].innerHTML;
+  const jzQingHtml = mockTimelineItems[16].innerHTML;
+  const jzRocHtml = mockTimelineItems[17].innerHTML;
+  const jzPrcHtml = mockTimelineItems[18].innerHTML;
   assert(
     jzQingHtml.includes('荆州府') && !jzQingHtml.includes('宜昌府'),
     `Expected Qing row at Jingzhou not to show misleading 100 km neighbor 宜昌府, got ${jzQingHtml}`
@@ -404,7 +404,7 @@ async function runTraceGenealogySuite(ctx) {
       appCode.includes("node.classList.toggle('is-trace-city', isTraced)"),
     'style.css and app.js must keep traced Tier-2 cities visible (.is-trace-city)'
   );
-  ctrl.dynastyIdx = 17;
+  ctrl.dynastyIdx = 18;
   ctrl.year = 2026;
   const wfHits = ctrl._queryQuickSearch('潍坊');
   assert(
@@ -501,7 +501,7 @@ async function runTraceGenealogySuite(ctx) {
       mockSeoNav.innerHTML.includes('Warring States Historical Map') &&
       mockSeoNav.innerHTML.includes("People's Republic of China Historical Map") &&
       !/[\u4e00-\u9fff]/.test(mockSeoNav.innerHTML),
-    'In English mode, _syncSeoDirectoryLocale() must translate all 18 dynasty entries with zero remaining CJK characters'
+    'In English mode, _syncSeoDirectoryLocale() must translate all 19 dynasty entries with zero remaining CJK characters'
   );
   ctrl.locale = 'zh';
   ctrl._syncSeoDirectoryLocale();

@@ -171,8 +171,8 @@ async function runCoreDataSuite(ctx) {
   }
 
   // 3. Validate historical dynasties, phases, settlements, and snapshot references
-  assert(Array.isArray(dynasties) && dynasties.length === 18, `Expected 18 dynasties, got ${dynasties && dynasties.length}`);
-  assert.strictEqual(dynasties[0].fromYear, -403, 'Timeline must start at 403 BCE (-403)');
+  assert(Array.isArray(dynasties) && dynasties.length === 19, `Expected 19 dynasties, got ${dynasties && dynasties.length}`);
+  assert.strictEqual(dynasties[0].fromYear, -770, 'Timeline must start at 770 BCE (-770, Spring and Autumn)');
   assert(dynasties[dynasties.length - 1].toYear >= 2026, 'Timeline must cover up to present (2026)');
 
   let totalSettlements = 0;
@@ -423,17 +423,17 @@ async function runCoreDataSuite(ctx) {
   assert(
     bootSnaps &&
       Array.isArray(bootSnaps.neighbors) &&
-      bootSnaps.s_zhanguo_a &&
+      bootSnaps.s_chunqiu_a &&
       bootSnaps.s_qin_a &&
       (FAST_MODE
-        ? bootSnaps.s_zhanguo_a.polities.length === snapshots.s_zhanguo_a.polities.length &&
+        ? bootSnaps.s_chunqiu_a.polities.length === snapshots.s_chunqiu_a.polities.length &&
           bootSnaps.s_qin_a.prefectures.length === snapshots.s_qin_a.prefectures.length
-        : JSON.stringify(bootSnaps.s_zhanguo_a) === JSON.stringify(snapshots.s_zhanguo_a) &&
+        : JSON.stringify(bootSnaps.s_chunqiu_a) === JSON.stringify(snapshots.s_chunqiu_a) &&
           JSON.stringify(bootSnaps.s_qin_a) === JSON.stringify(snapshots.s_qin_a)),
-    'atlas_boot.js must provide neighbors, s_zhanguo_a, and s_qin_a identical to atlas_snapshots.js for instant first paint'
+    'atlas_boot.js must provide neighbors, s_chunqiu_a, and s_qin_a identical to atlas_snapshots.js for instant first paint'
   );
   if (!FAST_MODE) {
-    verifyShape(bootSnaps.s_zhanguo_a.polities[0].shape, 'boot.s_zhanguo_a.polities[0]');
+    verifyShape(bootSnaps.s_chunqiu_a.polities[0].shape, 'boot.s_chunqiu_a.polities[0]');
   }
 
   // 6. Verify Unified Milestone Balloon Auto-Show ("史事浮签") follows #chk-milestones directly & dead code pruned

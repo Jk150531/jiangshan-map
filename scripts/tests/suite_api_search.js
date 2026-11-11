@@ -86,7 +86,7 @@ async function runApiSearchSuite(ctx) {
 
   // CUJ 9d: Timeline Clamping & No-Year-Zero Contract
   const mingtiaoClamped = ctrl.inspect({ year: -1600, place: '鸣条' });
-  assert.strictEqual(mingtiaoClamped.year, -403, 'Years before -403 must clamp to -403 (Warring States start)');
+  assert.strictEqual(mingtiaoClamped.year, -770, 'Years before -770 must clamp to -770 (Spring and Autumn start)');
   assert(mingtiaoClamped.modernProvince.includes('山西'), `Expected 鸣条 in 山西, got ${mingtiaoClamped.modernProvince}`);
   const yearZeroNorm = ctrl.inspect({ year: 0, place: '长安' });
   assert.strictEqual(yearZeroNorm.year, 1, 'Year 0 must normalize to 1 CE');
@@ -150,7 +150,7 @@ async function runApiSearchSuite(ctx) {
     }
   }
 
-  // CUJ 9g: Full Timeline Sweep (-403 to 2026) — Dynasty, Snapshot & Imperial Era Continuity
+  // CUJ 9g: Full Timeline Sweep (-770 to 2026) — Dynasty, Snapshot & Imperial Era Continuity
   let sweptYears = 0;
   for (let y = ctrl.minYear; y <= ctrl.maxYear; y++) {
     if (y === 0) continue;
@@ -376,7 +376,7 @@ async function runApiSearchSuite(ctx) {
     for (const st of j.stops) {
       totalJourneyStops++;
       assert(
-        typeof st.year === 'number' && st.year >= -403 && st.year <= 2026 && st.year !== 0,
+        typeof st.year === 'number' && st.year >= -770 && st.year <= 2026 && st.year !== 0,
         `Invalid stop year ${st.year} in journey ${j.key}`
       );
       assert(
@@ -1161,13 +1161,13 @@ async function runApiSearchSuite(ctx) {
 
   // CUJ 18: UX Friction Polish — same-effective-year milestone stepping, balloon nav, genealogy camera preservation, and pre-rendered HTML sync
   assert(
-    indexHtml.includes('value="-403"') &&
-      indexHtml.includes('公元前403年 · 周威烈王二十三年') &&
+    indexHtml.includes('value="-770"') &&
+      indexHtml.includes('公元前770年 · 周平王元年') &&
       indexHtml.includes(dynasties[0].summary) &&
       indexHtml.includes(dynasties[0].milestones[0].headline) &&
       appCode.includes('fromYearSync: true') &&
       appCode.includes('preserveGenealogyScroll'),
-    'Expected index.html pre-rendered initial state to match -403 Warring States opening milestone and app.js to preserve genealogy camera/scroll'
+    'Expected index.html pre-rendered initial state to match -770 Spring and Autumn opening milestone and app.js to preserve genealogy camera/scroll'
   );
   ctrl.milestoneBalloon = {
     innerHTML: '',
@@ -1396,8 +1396,10 @@ async function runApiSearchSuite(ctx) {
       Array.isArray(snap.regions) && snap.regions.length > 0,
       `Snapshot ${sk} must have non-empty regions after _hydrateSnapshots(), got ${(snap.regions || []).length}`
     );
-    const minPref =
-      sk === 's_zhanguo_a' || sk === 's_zhanguo_a2'
+    // 春秋尚无郡级政区（郡县制起于春秋晚期、行于战国），快照只含诸侯国面与地理区域，故不设郡数下限。
+    const minPref = sk.startsWith('s_chunqiu')
+      ? 0
+      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a2'
         ? 3
         : sk === 's_zhanguo_b0' || sk === 's_zhanguo_b1'
           ? 6

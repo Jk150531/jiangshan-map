@@ -135,7 +135,7 @@ function createValidationContext({ fastMode = false } = {}) {
     snapshots,
     enLocale,
     locale: 'zh',
-    year: -403,
+    year: -770,
     minYear: dynasties[0].fromYear,
     maxYear: dynasties[dynasties.length - 1].toYear,
     camera: { x: 350, y: 215, w: 500, h: 420, zoom: 2 },

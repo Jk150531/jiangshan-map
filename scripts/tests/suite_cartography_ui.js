@@ -1361,7 +1361,12 @@ async function runCartographyUiSuite(ctx) {
     const holdCount = stops.filter((s) => s.hold).length;
     assert(holdCount >= 180 && holdCount < stops.length, `Expected ~180+ map-changing nodes among ${stops.length}, got ${holdCount}`);
     const runMin = (totalTicks * 280) / 60000;
-    assert(runMin > 12 && runMin < 16, `A 1× full run should take ~14 min (≈190 map nodes × 2.8 s + ≈290 events × 1.1 s), got ${runMin.toFixed(1)} min`);
+    // 档期总时长随快照与事件条数增长，改按节点构成推算期望，避免每次扩内容都要改死数字。
+    const expectedMin = (holdCount * 2800 + (stops.length - holdCount) * 1100) / 60000;
+    assert(
+      runMin > expectedMin * 0.9 && runMin < expectedMin * 1.15,
+      `A 1× full run should take ~${expectedMin.toFixed(1)} min (${holdCount} map nodes × 2.8 s + ${stops.length - holdCount} events × 1.1 s), got ${runMin.toFixed(1)} min`
+    );
 
     const tang = dynasties.find((d) => d.key === 'tang');
     Object.assign(ctrl, {
