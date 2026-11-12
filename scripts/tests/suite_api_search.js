@@ -1399,7 +1399,8 @@ async function runApiSearchSuite(ctx) {
     // 春秋尚无郡级政区（郡县制起于春秋晚期、行于战国），快照只含诸侯国面与地理区域，故不设郡数下限。
     const minPref = sk.startsWith('s_chunqiu')
       ? 0
-      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a2' || sk === 's_zhanguo_p1' || sk === 's_zhanguo_p2'
+      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a2' || sk === 's_zhanguo_p1' || sk === 's_zhanguo_p2' ||
+          sk === 's_zhanguo_p2b' || sk === 's_zhanguo_p2c' || sk === 's_zhanguo_p2d'
         ? 3
         : sk === 's_zhanguo_b0' || sk === 's_zhanguo_b1'
           ? 6
@@ -1414,6 +1415,9 @@ async function runApiSearchSuite(ctx) {
   assert(
     snapshots.s_zhanguo_p1.prefectures.length === 3 &&
     snapshots.s_zhanguo_p2.prefectures.length === 3 &&
+    snapshots.s_zhanguo_p2b.prefectures.length === 3 &&
+    snapshots.s_zhanguo_p2c.prefectures.length === 3 &&
+    snapshots.s_zhanguo_p2d.prefectures.length === 3 &&
     snapshots.s_zhanguo_a.prefectures.length === 3 &&
       snapshots.s_zhanguo_a2.prefectures.length === 3 &&
       snapshots.s_zhanguo_b0.prefectures.length === 6 &&
@@ -1435,7 +1439,7 @@ async function runApiSearchSuite(ctx) {
     'Warring States, Qin, and Han snapshots must reflect chronological commandery (郡) progression including 薛郡'
   );
   // Regression guard: Early Warring States (-403..-317 BCE) only has 关中（内史）, 上郡, 上党郡; later commanderies appear at historical establishment phases
-  for (const earlyZgSnap of ['s_zhanguo_p1', 's_zhanguo_p2', 's_zhanguo_a', 's_zhanguo_a2']) {
+  for (const earlyZgSnap of ['s_zhanguo_p1', 's_zhanguo_p2', 's_zhanguo_p2b', 's_zhanguo_p2c', 's_zhanguo_p2d', 's_zhanguo_a', 's_zhanguo_a2']) {
     for (const laterCmd of ['汉中郡', '蜀郡', '巴郡', '渔阳郡', '上谷郡', '代郡', '河东郡', '陇西郡', '南阳郡', '太原郡']) {
       assert(
         !snapshots[earlyZgSnap].prefectures.some((p) => p.title === laterCmd) &&
@@ -1472,6 +1476,39 @@ async function runApiSearchSuite(ctx) {
       loreData.PLACE_LANDMARK_EVENTS.some((ev) => ev.zh.includes('薛仁杲')) &&
       !loreData.PLACE_LANDMARK_EVENTS.some((ev) => ev.zh.includes('薛仁果')),
     'State of Lu (鲁) chronology (-403..-250 -> Chu -249 -> Qin 薛郡 -223) and 薛仁杲 spelling must hold'
+  );
+  // Regression guard: small central-plain states survive past the -475 era boundary and disappear
+  // strictly at their own annexation year (陈 -478 / 曹 -487 are already gone by -475; 蔡 -447,
+  // 杞 -445, 莒 -431, 郑/许 -375, 薛 -322, 滕 -286, 邾 -261, 卫 -209).
+  const zgPolityTitles = (sk) => snapshots[sk].polities.map((p) => p.title);
+  assert(
+    ['卫', '郑', '蔡', '滕', '薛', '莒', '邾', '许', '杞'].every((t) => zgPolityTitles('s_zhanguo_p1').includes(t)) &&
+      !zgPolityTitles('s_zhanguo_p1').includes('陈') &&
+      !zgPolityTitles('s_zhanguo_p1').includes('曹') &&
+      zgPolityTitles('s_zhanguo_p1').includes('鲜虞') &&
+      !zgPolityTitles('s_zhanguo_p1').includes('中山'),
+    's_zhanguo_p1 (-475) must keep 卫/郑/蔡/滕/薛/莒/邾/许/杞 and 鲜虞 (陈 -478, 曹 -487 already gone, 中山 not yet founded)'
+  );
+  assert(
+    zgPolityTitles('s_zhanguo_p2b').includes('杞') &&
+      zgPolityTitles('s_zhanguo_p2b').includes('莒') &&
+      !zgPolityTitles('s_zhanguo_p2b').includes('蔡') &&
+      !zgPolityTitles('s_zhanguo_p2c').includes('杞') &&
+      !zgPolityTitles('s_zhanguo_p2c').includes('莒') &&
+      !zgPolityTitles('s_zhanguo_p2d').includes('莒') &&
+      zgPolityTitles('s_zhanguo_p2d').includes('中山') &&
+      !zgPolityTitles('s_zhanguo_p2d').includes('鲜虞') &&
+      zgPolityTitles('s_zhanguo_a').includes('郑') &&
+      !zgPolityTitles('s_zhanguo_a2').includes('郑') &&
+      !zgPolityTitles('s_zhanguo_a2').includes('许') &&
+      zgPolityTitles('s_zhanguo_a2').includes('薛') &&
+      !zgPolityTitles('s_zhanguo_b0').includes('薛') &&
+      zgPolityTitles('s_zhanguo_b0').includes('滕') &&
+      !zgPolityTitles('s_zhanguo_c').includes('滕') &&
+      zgPolityTitles('s_zhanguo_c').includes('邾') &&
+      !zgPolityTitles('s_zhanguo_c2').includes('邾') &&
+      zgPolityTitles('s_zhanguo_e5').includes('卫'),
+    'small-state lifetimes (蔡 -447, 杞 -445, 莒 -431, 郑/许 -375, 薛 -322, 滕 -286, 邾 -261, 卫 -209) must follow each snapshot key'
   );
   for (const anachronistic of ['会稽郡', '鄣郡', '东海郡', '泗水郡']) {
     assert(
