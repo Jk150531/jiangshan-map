@@ -614,6 +614,9 @@ window.ATLAS_EVENT_PINYIN = {
     ]
   },
   landmarks: [
+    ["zhengjizushuaishiquwenzhimai","zhouzhengyoushijiaowu","zhengjizushuaishiquwenzhimaizhouzhengyoushijiaowu","wen"],
+    ["jinwengongweiyuan","shousanrizhiliangzhiyue","yuanrenzijiang","jinwengongweiyuanshousanrizhiliangzhiyueyuanrenzijiang","yuan"],
+    ["qinshixizhengdaochuhua","zhengshangrenxiangaokaoshiermouxie","qinshixizhengdaochuhuazhengshangrenxiangaokaoshiermouxie","hua"],
     ["tenghou","xuehoulaichaoyulu","luyingongyizhoumengxutengweichang","tenghouxuehoulaichaoyululuyingongyizhoumengxutengweichang","teng"],
     ["qihuangongguotanshouwuli","jiweihousuimietan","tanzichubenju","qihuangongguotanshouwulijiweihousuimietantanzichubenju","tan"],
     ["jihoudaquqiguo","qirenquqidi","jiguozhisisuijue","jihoudaquqiguoqirenquqidijiguozhisisuijue","ji"],
