@@ -3431,11 +3431,23 @@ html[lang="en"] .genealogy-list li {
   #map-key {
     left: 8px;
     bottom: 8px;
-    /* 预留右下角 canvas-br-dock 的宽度，避免窄屏图例横跨整幅与停靠栏相撞 */
-    max-width: calc(100% - 188px);
+    /* 窄屏固定宽度：宽度不随文字度量变化，就不会和右下角 canvas-br-dock 抢位置 */
+    width: 168px;
+    max-width: calc(100% - 190px);
+    box-sizing: border-box;
     padding: 5px 8px;
     font-size: 11px;
     gap: 3px;
+    overflow: hidden;
+  }
+  /* 折叠态内容统一省略号，避免长串文字把固定宽度撑破 */
+  #map-key:not(.is-mobile-expanded) .key-heading,
+  #map-key:not(.is-mobile-expanded) .key-phase-badge,
+  #map-key:not(.is-mobile-expanded) .key-note {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .key-heading {
     font-size: 11px;
