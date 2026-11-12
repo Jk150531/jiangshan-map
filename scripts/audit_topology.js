@@ -116,16 +116,23 @@ function borderDistance(shape, px, py) {
  * the midpoints of a's edges: a sliver whose corners all sit on b's border still has an edge
  * running through b or beside it.
  */
-function compareShapes(a, b) {
+function compareShapes(a, b, others = []) {
   const result = { overlap: 0, gap: 0 };
   const [bx0, by0, bx1, by1] = b.bbox;
+  const coveredByThird = (x, y) =>
+    others.some((o) => {
+      const [ox0, oy0, ox1, oy1] = o.bbox;
+      if (x < ox0 || x > ox1 || y < oy0 || y > oy1) return false;
+      return contains(o, x, y);
+    });
   const sample = (x, y, isVertex) => {
     if (x < bx0 - GAP_DEG || x > bx1 + GAP_DEG || y < by0 - GAP_DEG || y > by1 + GAP_DEG) return;
     if (isVertex && b.vertices.has(pointKey(x, y))) return;
     const d = borderDistance(b, x, y);
     if (d <= ON_BORDER_DEG) return;
     if (contains(b, x, y)) result.overlap++;
-    else if (d !== Infinity) result.gap++;
+    // 落在第三国境内说明两国之间隔着一个政权，不是缝
+    else if (d !== Infinity && !coveredByThird(x, y)) result.gap++;
   };
   for (const ring of a.rings) {
     for (let i = 0; i < ring.length - 1; i++) {
@@ -161,12 +168,13 @@ function auditDoc(doc, keys) {
     const polities = Array.isArray(snap) || !Array.isArray(snap.polities) ? [] : snap.polities;
     const core = [...new Set(polities)].filter((idx) => CORE_ROLES.has(doc.features[idx].role) && doc.features[idx].shape);
     const entry = { key, overlap: 0, gap: 0, pairs: [] };
+    // 任一有面的政权（含 neighbor 周边部族）都可以占据两国之间的地带，判定为不是缝
+    const anyShapes = [...new Set(polities)].filter((idx) => doc.features[idx] && doc.features[idx].shape).map((idx) => shapeOf(idx));
     for (const ia of core) {
       for (const ib of core) {
         if (ia === ib || !bboxesTouch(shapeOf(ia).bbox, shapeOf(ib).bbox)) continue;
-        const ck = `${ia}|${ib}`;
-        if (!pairCache.has(ck)) pairCache.set(ck, compareShapes(shapeOf(ia), shapeOf(ib)));
-        const { overlap, gap } = pairCache.get(ck);
+        const others = anyShapes.filter((s) => s !== shapeOf(ia) && s !== shapeOf(ib));
+        const { overlap, gap } = compareShapes(shapeOf(ia), shapeOf(ib), others);
         if (!overlap && !gap) continue;
         entry.overlap += overlap;
         entry.gap += gap;
