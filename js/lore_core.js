@@ -905,7 +905,7 @@ window.ATLAS_LORE_DATA = Object.assign(window.ATLAS_LORE_DATA || {}, {
     {"key":"zuozongtang","zh":"左宗棠","en":"Zuo Zongtang","courtesyZh":"左文襄公 · 字季高 · 收复新疆","courtesyEn":"Statesman & Recoverer of Xinjiang","dynastyKey":"qing","span":[1812,1885],"aliases":["左季高","左文襄公"],"evCount":8},
     {"key":"sunzhongshan","zh":"孙中山","en":"Sun Yat-sen","courtesyZh":"孙文 · 字逸仙 · 近代民主革命先行者","courtesyEn":"Founder of the Republic of China","dynastyKey":"roc","span":[1866,1925],"aliases":["孙文","孙逸仙","中山先生"],"evCount":18},
     {"key":"jiangjieshi","zh":"蒋介石","en":"Chiang Kai-shek","courtesyZh":"蒋中正 · 北伐与抗战统帅","courtesyEn":"Chiang Chung-cheng","dynastyKey":"roc","span":[1887,1975],"aliases":["蒋中正"],"evCount":12},
-    {"key":"maozedong","zh":"毛泽东","en":"Mao Zedong","courtesyZh":"字润之 · 中华人民共和国主要缔造者","courtesyEn":"Founding Leader of the PRC","dynastyKey":"prc","span":[1893,1976],"aliases":["毛润之","润之"],"evCount":7},
+    {"key":"maozedong","zh":"毛泽东","en":"Mao Zedong","courtesyZh":"字润之 · 中华人民共和国主要缔造者","courtesyEn":"Founding Leader of the PRC","dynastyKey":"prc","span":[1893,1976],"aliases":["毛润之","润之"],"evCount":8},
     {"key":"dengxiaoping","zh":"邓小平","en":"Deng Xiaoping","courtesyZh":"改革开放总设计师","courtesyEn":"Architect of Reform & Opening-Up","dynastyKey":"prc","span":[1904,1997],"aliases":["邓希贤"],"evCount":6},
     {"key":"chensheng","zh":"陈胜","en":"Chen Sheng","courtesyZh":"张楚王 · 大泽乡首义","courtesyEn":"Leader of Dazexiang Uprising","dynastyKey":"qin","span":[-240,-207],"aliases":["陈涉","陈胜吴广"],"evCount":6},
     {"key":"lvbu","zh":"吕布","en":"Lü Bu","courtesyZh":"温侯 · 字奉先 · 汉末猛将","courtesyEn":"Fierce Warlord of Late Han","dynastyKey":"donghan","span":[160,199],"aliases":["奉先","吕奉先","Lu Bu","Lv Bu"],"evCount":5},
