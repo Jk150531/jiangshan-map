@@ -1661,8 +1661,16 @@ window.EN_LOCALE = {
       "Wang Yangming suppresses the Prince of Ning (Zhu Chenhao) Rebellion at Nanchang in 35 days",
       "Nanchang-fu"
     ],
+    "zhanguo:-455": [
+      "Zhi Bo Yao floods Jinyang with the Jin River; Zhao Xiangzi holds out as Han and Wei waver",
+      "Jinyang"
+    ],
+    "zhanguo:-453": [
+      "Han, Zhao, and Wei destroy the Zhi and divide Jin; the ducal house keeps only Jiang and Quwo",
+      "Jinyang · Jiang"
+    ],
     "zhanguo:-403": [
-      "King Weilie of Zhou recognizes Wei, Zhao, and Han as feudal lords (Partition of Jin)",
+      "King Weilie of Zhou invests Han, Zhao, and Wei as lords, ratifying the 453 BCE partition",
       "Luoyang · Jinyang"
     ],
     "zhanguo:-386": [
@@ -7152,10 +7160,10 @@ window.EN_LOCALE = {
     "前 475 — 前 456 · 晋四卿并立、吴越争衡：韩赵魏尚未列为诸侯，故仍作「晋」一体；吴据江东与淮上，越仅浙江": "475–456 BCE · Four Houses of Jin & Wu–Yue Rivalry: Han, Zhao and Wei not yet enfeoffed, hence Jin as one realm; Wu holds Jiangdong and the Huai, Yue only Zhejiang",
     "战国初期（前453—前404年 · 三家灭智、晋公室仅存绛曲沃）": "Early Warring States (453–404 BCE: Zhi Annihilated, Jin's Ducal House Confined to Jiang & Quwo)",
     "前453年韩、赵、魏三家共灭智伯，晋国公室名存实亡，仅余绛与曲沃两邑（至前376年晋静公被废、晋亡）；前403年周威烈王正式册命三家为诸侯（《资治通鉴》开篇）。越已于前473年灭吴，尽有吴地。": "In 453 BCE Han, Zhao, and Wei destroyed the Zhi clan together; Jin's ducal house survived in name only, holding the two towns of Jiang and Quwo (Jin ended in 376 BCE when Duke Jing was deposed). In 403 BCE King Weilie of Zhou formally enfeoffed the three houses as marquises (opening Zizhi Tongjian). Yue had annexed Wu in 473 BCE and held all its lands.",
-    "前 453 — 前 405 · 三家灭智、晋公室仅存绛与曲沃；越已灭吴（前473）尽有吴地，七雄格局将成": "453–405 BCE · Zhi Annihilated, Jin's Ducal House Reduced to Jiang & Quwo; Yue Annexed Wu (473 BCE), the Seven Powers Taking Shape",
+    "前 453 — 前 405 · 三家灭智而分晋地、晋公室仅存绛与曲沃（尚未受周王册命，前403 方列诸侯）；越已灭吴（前473）尽有吴地": "453–405 BCE · Han, Zhao and Wei divide Jin after destroying the Zhi; the ducal house holds only Jiang & Quwo until Zhou's investiture in 403. Yue annexed Wu (473 BCE)",
     "战国初期（前403—前341年 · 三家分晋、田氏代齐与魏霸中原）": "Early Warring States (403–341 BCE: Partition of Jin, Tian Qi & Hegemony of Wei)",
     "前403年周威烈王册命韩、赵、魏为诸侯（《资治通鉴》开篇），前386年田氏代齐，战国七雄格局确立；魏文侯、武侯任李悝、吴起率先称雄中原（西跨洛水置河西郡、上郡），宋、巴、蜀、越、中山、义渠与东周王畿并存。": "In 403 BCE King Weilie of Zhou recognized Han, Zhao, and Wei as marquises (opening Zizhi Tongjian), and in 386 BCE the Tian clan took Qi. Marquises Wen and Wu of Wei achieved early hegemony across the Central Plains and Hexi Commandery, alongside Song, Ba, Shu, Yue, Zhongshan, Yiqu, and Eastern Zhou.",
-    "前 403 — 前 341 · 三家分晋、田氏代齐与魏霸中原：七雄并立，宋、巴、蜀、越、中山尚存": "403–341 BCE · Partition of Jin, Tian Qi & Hegemony of Wei: Seven Powers with Song, Ba, Shu, Yue & Zhongshan",
+    "前 403 — 前 341 · 周威烈王册命三家为诸侯（追认前453 分晋之实）、田氏代齐与魏霸中原：七雄并立，宋、巴、蜀、越、中山尚存": "403–341 BCE · King Weilie of Zhou invests the three houses as lords, ratifying the 453 BCE partition; Tian Qi and Wei hegemony: Seven Powers with Song, Ba, Shu, Yue & Zhongshan",
     "前 340 — 前 317 · 商鞅收河西、魏迁大梁与五国相王：宋、巴、蜀、越、中山、义渠尚存": "340–317 BCE · Shang Yang Recovers Hexi, Wei Moves to Daliang & Five-State Accord: Song, Ba, Shu, Yue, Zhongshan & Yiqu",
     "前 316 — 前 307 · 秦司马错灭巴蜀、丹阳之战取汉中：宋、越、中山、义渠尚存": "316–307 BCE · Qin Conquers Ba-Shu & Takes Hanzhong at Danyang: Song, Yue, Zhongshan & Yiqu Survive",
     "前 306 — 前 301 · 楚怀王灭越尽取旧吴之地：宋、中山、义渠尚存，燕尚未东辟辽东": "306–301 BCE · King Huai of Chu Conquers Yue: Song, Zhongshan & Yiqu Survive; Prior to Yan’s Liaodong Expansion",

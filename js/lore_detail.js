@@ -32934,7 +32934,8 @@
     {"id":"pengyang:187x","dynastyKey":"donghan","year":187,"coord":[108.9,34.3],"site":"长安","siteEn":"Chang'an","zh":"彭羕游其长安，交其名士","en":"He travels at Chang'an and meets scholars","persons":["pengyang"]},
     {"id":"pengyang:196x","dynastyKey":"donghan","year":196,"coord":[114.3,34.8],"site":"开封","siteEn":"Kaifeng","zh":"彭羕撰其书，述其所得","en":"He writes on what he has learned","persons":["pengyang"]},
     {"id":"pengyang:205x","dynastyKey":"donghan","year":205,"coord":[108.9,34.3],"site":"长安","siteEn":"Chang'an","zh":"彭羕校其旧文，正其失","en":"He corrects errors in the old texts","persons":["pengyang"]},
-    {"id":"pengyang:214x","dynastyKey":"donghan","year":214,"coord":[114.3,34.8],"site":"开封","siteEn":"Kaifeng","zh":"彭羕卒于开封，其书后传","en":"He dies at Kaifeng and his books survive","persons":["pengyang"]}
+    {"id":"pengyang:214x","dynastyKey":"donghan","year":214,"coord":[114.3,34.8],"site":"开封","siteEn":"Kaifeng","zh":"彭羕卒于开封，其书后传","en":"He dies at Kaifeng and his books survive","persons":["pengyang"]},
+    {"id":"zhanguo:-433:501","dynastyKey":"zhanguo","year":-433,"coord":[113.38,31.72],"site":"随","siteEn":"Sui","zh":"曾侯乙墓在随，随葬编钟六十五件，楚惠王所赠镈钟在焉","en":"Marquis Yi of Zeng is buried at Sui with sixty-five bells, one a gift from King Hui of Chu","persons":["zenghouyi"]},
   ],
   "HISTORICAL_JOURNEYS": [
     {
@@ -39670,7 +39671,7 @@
     {"key":"zhiboyao","zh":"智伯瑶","en":"Zhi Bo Yao","courtesyZh":"智襄子 · 晋正卿 · 决水灌晋阳","courtesyEn":"Zhi Xiangzi, the overmighty minister destroyed at Jinyang","dynastyKey":"zhanguo","span":[-510,-453],"aliases":["智襄子","智瑶"],"evCount":3,"tokens":["智伯瑶","智襄子","智瑶"]},
     {"key":"zhaoxiangzi","zh":"赵襄子","en":"Zhao Xiangzi","courtesyZh":"赵无恤 · 守晋阳 · 三家灭智","courtesyEn":"Zhao Wuxu, who held Jinyang and destroyed the Zhi clan","dynastyKey":"zhanguo","span":[-505,-425],"aliases":["赵无恤","赵孟"],"evCount":4,"tokens":["赵襄子","赵无恤"]},
     {"key":"tianchang","zh":"田常","en":"Tian Chang","courtesyZh":"田恒 · 弑齐简公 · 田氏专齐","courtesyEn":"Tian Heng, who killed Duke Jian and made Qi a Tian house","dynastyKey":"zhanguo","span":[-520,-468],"aliases":["田恒","陈恒"],"evCount":3,"tokens":["田常","田恒"]},
-    {"key":"chuhuiwang","zh":"楚惠王","en":"King Hui of Chu","courtesyZh":"熊章 · 灭陈 · 白公之乱后复国","courtesyEn":"Xiong Zhang, who annexed Chen and survived Bai Gong Sheng","dynastyKey":"zhanguo","span":[-488,-432],"aliases":["熊章"],"evCount":3,"tokens":["楚惠王","熊章"]},
+    {"key":"chuhuiwang","zh":"楚惠王","en":"King Hui of Chu","courtesyZh":"熊章 · 灭陈 · 白公之乱后复国","courtesyEn":"Xiong Zhang, who annexed Chen and survived Bai Gong Sheng","dynastyKey":"zhanguo","span":[-488,-432],"aliases":["熊章"],"evCount":4,"tokens":["楚惠王","熊章"]},
     {"key":"zhaoshuai","zh":"赵衰","en":"Zhao Shuai","courtesyZh":"赵成子 · 字子余 · 从亡十九年","courtesyEn":"Zhao Chengzi, minister who shared Chong'er's nineteen years of exile","dynastyKey":"chunqiu","span":[-700,-622],"aliases":["赵成子","子余"],"evCount":6,"tokens":["赵衰","赵成子"]},
     {"key":"xunxi","zh":"荀息","en":"Xun Xi","courtesyZh":"荀叔 · 假道灭虢 · 托孤死节","courtesyEn":"Xun Shu, who borrowed passage through Yu and died for his charge","dynastyKey":"chunqiu","span":[-700,-651],"aliases":["荀叔"],"evCount":5,"tokens":["荀息"]},
     {"key":"likejin","zh":"里克","en":"Li Ke","courtesyZh":"里季 · 连弑二君 · 伏剑而死","courtesyEn":"Li Ji, minister who slew two boy rulers and died on his sword","dynastyKey":"chunqiu","span":[-700,-650],"aliases":["里季"],"evCount":4,"tokens":["里克"]},

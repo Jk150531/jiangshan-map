@@ -50,7 +50,9 @@ window.ATLAS_EVENT_PINYIN = {
       ["chunqiuxiaxian","zhoujingwangbeng","yuanwangli","chunqiuxiaxianzhoujingwangbengyuanwangli","luoyi"]
     ],
     "zhanguo": [
-      ["zhouweiliewangminghan","zhao","weiweizhuhou","sanjiafenjin","zhouweiliewangminghanzhaoweiweizhuhousanjiafenjin","luoyang","jinyang"],
+      ["zhiboyaojuejinshuiguanjinyang","zhaoxiangzijianshouguchengerhan","weilixin","zhiboyaojuejinshuiguanjinyangzhaoxiangzijianshouguchengerhanweilixin","jinyang"],
+      ["han","zhao","weigongmiezhiboersanfenjindi","jingongshijinyujiangyuquwo","hanzhaoweigongmiezhiboersanfenjindijingongshijinyujiangyuquwo","jinyang","jiang"],
+      ["zhouweiliewangceminghan","zhao","weiweizhuhou","zhuirenqian","nianfenjinzhishi","zhouweiliewangceminghanzhaoweiweizhuhouzhuirenqian","luoyang","jinyang"],
       ["zhouanwangcemingtianheweiqihou","tianshidaiqi","qixiongxingcheng","zhouanwangcemingtianheweiqihoutianshidaiqiqixiongxingcheng","linzi"],
       ["chudaowangrenwuqibianfaqiangbing","nanpingbaiyue","beibingchencai","xiquesanjin","chudaowangrenwuqibianfaqiangbingnanpingbaiyuebeibingchencaixiquesanjin","yingdu","jiangling"],
       ["hanaihougongmiezhengguobingqianduxinzheng","qian","niansanjiafeijinjinggongjinfenjindi","hanaihougongmiezhengguobingqianduxinzhengqian","xinzheng"],
@@ -33545,6 +33547,7 @@ window.ATLAS_EVENT_PINYIN = {
     ["pengyangyouqichangan","jiaoqimingshi","pengyangyouqichanganjiaoqimingshi","changan"],
     ["pengyangzhuanqishu","shuqisuode","pengyangzhuanqishushuqisuode","kaifeng"],
     ["pengyangxiaoqijiuwen","zhengqishi","pengyangxiaoqijiuwenzhengqishi","changan"],
-    ["pengyangzuyukaifeng","qishuhouchuan","pengyangzuyukaifengqishuhouchuan","kaifeng"]
+    ["pengyangzuyukaifeng","qishuhouchuan","pengyangzuyukaifengqishuhouchuan","kaifeng"],
+    ["zenghouyimuzaisui","suizangbianzhongliushiwujian","chuhuiwangsuozengbozhongzaiyan","zenghouyimuzaisuisuizangbianzhongliushiwujianchuhuiwangsuozengbozhongzaiyan","sui"]
   ]
 };

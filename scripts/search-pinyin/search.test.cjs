@@ -127,7 +127,7 @@ test('historical names use the readings in their event context', () => {
     ['ru nan shao ling', 100, '《说文解字》'],
     ['xie jin yao guang xiao', 1408, '解缙、姚广孝'],
     ['xi hai dao xing jun da zong guan', 635, '西海道行军大总管'],
-    ['zeng hou yi mu', -400, '曾侯乙墓'],
+    ['zeng hou yi mu', -433, '曾侯乙墓'],
     ['zeng guo fan yu hu nan heng zhou', 1854, '曾国藩于湖南衡州'],
     ['shangyangziyueyangqiandu', -350, '商鞅自栎阳迁都'],
     ['ding shi san xing sheng', 1413, '定十三行省'],
