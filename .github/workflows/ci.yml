@@ -20,32 +20,45 @@ jobs:
           node-version: '20'
 
       - name: Verify generated event pinyin and search regressions
+        id: pinyin
         run: |
           npm ci --prefix scripts/search-pinyin --ignore-scripts --no-audit --no-fund
           npm test --prefix scripts/search-pinyin
 
       - name: Verify polygon bundles are canonical encodings
+        id: bundles
         if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/build_atlas.js --check
 
       - name: Check polity border topology against baseline
+        id: topology
         if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/audit_topology.js --check
 
       - name: Check prefecture layer against baseline
+        id: prefectures
         if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/audit_prefectures.js --check
 
       - name: Check data references against baseline
+        id: sources
         if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/audit_sources.js --check
 
       - name: Check first-paint synchronous script gzip budget
+        id: perf
         run: node scripts/perf_budget.js --check
 
       - name: Check responsive UI layout geometry and non-overlap
+        id: layout
         run: node scripts/audit_layout.js --check
 
       - name: Run Atlas Validation Suite
+        id: suite
         if: hashFiles('data/atlas/index.json') != ''
         run: node scripts/validate_atlas.js
+
+      - name: Report which check failed
+        if: failure()
+        run: |
+          echo "::error title=检查矩阵::pinyin=${{ steps.pinyin.outcome }} bundles=${{ steps.bundles.outcome }} topology=${{ steps.topology.outcome }} prefectures=${{ steps.prefectures.outcome }} sources=${{ steps.sources.outcome }} perf=${{ steps.perf.outcome }} layout=${{ steps.layout.outcome }} suite=${{ steps.suite.outcome }}"
