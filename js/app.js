@@ -1,6 +1,3 @@
-/**
- * Historical Atlas Controller (ES6 Class Architecture)
- */
 (function () {
   'use strict';
 
@@ -22,7 +19,6 @@
     const text = String(value);
     if (node.getAttribute(name) !== text) node.setAttribute(name, text);
   };
-  // Regime prefixes carried by era-span names, e.g. '北魏正光' = '北魏' + era '正光'.
   const ERA_DYNASTY_PREFIXES = [
     '南朝宋', '南朝齐', '南朝梁', '南朝陈', '西汉', '东汉', '新莽', '西晋', '东晋',
     '北魏', '东魏', '西魏', '北齐', '北周', '西梁', '武周', '后梁', '后唐', '后晋', '后汉', '后周',
@@ -70,11 +66,6 @@
     部: 'Tribal Division',
     侨州: 'Emigre Prefecture',
   };
-  // Timeline autoplay is event-driven: the playhead jumps from one node to the next (every
-  // milestone year plus every territory-snapshot boundary) instead of crawling through the
-  // ~1,950 calendar years where nothing changes. An ordinary event stays up long enough to
-  // read its headline; a node that redraws the map (isMapChange, dynasty opening, snapshot
-  // switch) holds longer so the border diff can be seen. Playback speed scales the tick.
   const AUTOPLAY_TICK_MS = 280;
   const AUTOPLAY_EVENT_TICKS = 4;
   const AUTOPLAY_MAP_CHANGE_TICKS = 10;
@@ -833,8 +824,6 @@
       }
     }
 
-    // First-visit guide: three ways in, shown once on a bare homepage visit.
-    // Deep links (?year=, ?person=, topic pages) already carry intent, so skip.
     _maybeShowStartGuide() {
       if (typeof location === 'undefined' || !this._id('start-guide')) return;
       const q = new URLSearchParams(location.search);
@@ -996,7 +985,6 @@
       this.journeyCard = this._id('journey-card');
     }
 
-    // ---------------- Localization helpers ----------------
     _zh(text) {
       if (!text || typeof text !== 'string') return text;
       if (this.locale === 'zh-tw' && typeof window !== 'undefined' && window.ZH_HANT_CONV) {
@@ -1103,7 +1091,6 @@
       }
       const dict = dictRef || {};
       const map = { ...ADMIN_CATEGORY_EN };
-      // 1. Stripped parenthetical keys from enLocale.dict (e.g. '南郑（汉中）' -> '南郑': 'Nanzheng')
       for (const [k, v] of Object.entries(dict)) {
         if (!v) continue;
         const strippedK = k.replace(/（[^）]+）|\([^)]+\)/g, '').trim();
@@ -1112,7 +1099,6 @@
           if (strippedV) map[strippedK] = strippedV;
         }
       }
-      // 2. Strategic passes
       for (const p of HistoricalAtlasController.STRATEGIC_PASSES || []) {
         if (!p) continue;
         if (p.ancientZh && p.ancientEn) {
@@ -1128,7 +1114,6 @@
         if (p.rangeZh && p.rangeEn) map[p.rangeZh] = p.rangeEn;
         if (p.chokepointZh && p.chokepointEn) map[p.chokepointZh] = p.chokepointEn;
       }
-      // 2b. Settlement era-dependent names
       for (const d of this.dynasties || []) {
         for (const s of (d && d.settlements) || []) {
           for (const en of (s && s.eraNames) || []) {
@@ -1136,7 +1121,6 @@
           }
         }
       }
-      // 3. Historical journeys stops
       for (const j of Object.values(HistoricalAtlasController.HISTORICAL_JOURNEYS || {})) {
         if (j && j.titleZh && j.titleEn) map[j.titleZh] = j.titleEn;
         for (const st of (j && j.stops) || []) {
@@ -1149,7 +1133,6 @@
           if (st && st.modern && st.modernEn) map[st.modern] = st.modernEn;
         }
       }
-      // 4. Landmark events & milestone sites
       for (const lm of HistoricalAtlasController.PLACE_LANDMARK_EVENTS || []) {
         if (lm && lm.site && lm.siteEn) map[lm.site] = lm.siteEn;
         if (lm && lm.zh && lm.en) map[lm.zh] = lm.en;
@@ -1163,7 +1146,6 @@
           if (sEn && !map[m.site]) map[m.site] = sEn;
         }
       }
-      // 5. Corridors
       const corrDict = (this.enLocale && this.enLocale.corridors) || {};
       for (const c of this.corridors || []) {
         if (!c || !c.title) continue;
@@ -1368,11 +1350,6 @@
       return match;
     }
 
-    /**
-     * Era span of the regime ruling `coord` in year `y` (or of the named `regime`) when
-     * that regime kept its own chronology, e.g. Northern Wei while CHINESE_ERA_SPANS
-     * follows the Southern Dynasties; null means the reference track applies.
-     */
     _resolveRegionalEraSpan(y, dynasty, coord, regime = null) {
       const yr = Math.round(y);
       const tracks = HistoricalAtlasController.REGIONAL_ERA_TRACKS;
@@ -1397,11 +1374,6 @@
       return match;
     }
 
-    /**
-     * Schematic borders can leave frontier events (e.g. the Six Garrisons of 523) inside
-     * a neighboring steppe polity; take the snapshot's main regime if it lies on the
-     * nearest of four rings (25–100 km) around the point.
-     */
     _nearestMainPolity([lng, lat], snap) {
       const kmPerDegLng = 111.32 * Math.cos(lat * DEG_TO_RAD);
       for (const km of [25, 50, 75, 100]) {
@@ -1414,12 +1386,6 @@
       return null;
     }
 
-    /**
-     * Era label for a dated event (milestone): an explicit `eraRegime` ("reference" or a
-     * REGIONAL_ERA_TRACKS regime) wins over the regime ruling the event's location. The
-     * override covers events whose subject is not the regime holding that spot, e.g. a
-     * Song–Jin treaty pinned on the Jin side of the border.
-     */
     _eventEraLabel(dynasty, ev) {
       if (ev.eraRegime === 'reference') return this.formatEraLabel(ev.year, dynasty);
       if (ev.eraRegime) return this.formatEraLabel(ev.year, dynasty, null, ev.eraRegime);
@@ -1475,11 +1441,6 @@
       return `${eraPinyin} Year ${targetNum}${monarchEn ? ' · ' + monarchEn : ''}`;
     }
 
-    /**
-     * Era label for year `y`. Without `coord` it follows the reference chronology
-     * (Zizhi Tongjian convention); with `coord` (or an explicit `regime`) it uses the
-     * era of the regime that ruled that place, when it has a REGIONAL_ERA_TRACKS entry.
-     */
     formatEraLabel(y, dynasty, coord = null, regime = null) {
       const yr = Math.round(y);
       const regional = coord || regime ? this._resolveRegionalEraSpan(yr, dynasty, coord, regime) : null;
@@ -1545,9 +1506,6 @@
       } catch (_) {}
     }
 
-    // The URL mirrors what the user is looking at, so refresh and share land on the same view.
-    // Only restorable state is written; one-shot params (q, place, hover, quiz, ...) are dropped
-    // once the user moves on, because they no longer describe the screen.
     _urlStateParams() {
       const prev =
         typeof location !== 'undefined' ? new URLSearchParams(location.search) : new URLSearchParams();
@@ -1562,7 +1520,6 @@
         p.set('person', personKeys.join(','));
         if (this.activePersonEventIdx >= 0) p.set('stop', String(this.activePersonEventIdx));
       } else {
-        // A place card can stay open on top of a regime profile, so both are restorable together.
         if (this.activePolity && this.activePolity.curated && this.activePolity.key) {
           p.set('polity', this.activePolity.key);
         }
@@ -1587,11 +1544,9 @@
         return;
       }
       try {
-        // Commas are legal in a query string; keep person=a,b / trace=lng,lat readable.
         const qs = this._urlStateParams().toString().replace(/%2C/gi, ',');
         const nextUrl = `${location.pathname || '/'}${qs ? `?${qs}` : ''}${location.hash || ''}`;
         const curUrl = `${location.pathname || '/'}${location.search || ''}${location.hash || ''}`;
-        // replaceState, not pushState: scrubbing the timeline must not flood the Back button.
         if (nextUrl !== curUrl) window.history.replaceState(window.history.state || null, '', nextUrl);
       } catch (_) {}
     }
@@ -1601,16 +1556,12 @@
       if (this._urlSyncTimer) clearTimeout(this._urlSyncTimer);
       this._urlSyncTimer = setTimeout(() => {
         this._urlSyncTimer = null;
-        // Quiz rounds are not restorable; stopChallenge() writes the post-quiz view instead.
         if (this.challenge) return;
-        // Wait for playback / drag to settle instead of rewriting the URL every frame.
         if (this.playing || this.isScrubbing) this._scheduleUrlSync();
         else this._writeUrlState();
       }, 400);
     }
 
-    // A clean home load must stay clean even if the intro animates the timeline, so syncing
-    // starts only once the URL already carried state or the user has actually interacted.
     _armUrlSync(hasDeepLinkState) {
       if (this.embed || this._urlSyncArmed || typeof window === 'undefined') return;
       const arm = () => {
@@ -1625,9 +1576,6 @@
       for (const t of ['pointerdown', 'keydown', 'wheel']) window.addEventListener(t, arm, true);
     }
 
-    // ---------------- Embed mode (?embed=1) ----------------
-    // Other sites iframe the atlas with the same state params as share links. The main site gets
-    // no UI for this (it is documented in the README); everything below only runs inside an embed.
     _parseEmbedParams(q) {
       if (!q || q.get('embed') !== '1') return null;
       const num = (k) => {
@@ -1644,7 +1592,6 @@
       };
     }
 
-    // Narrow the global year bounds; every scrub, step, autoplay and deep link already clamps to them.
     _applyEmbedYearRange() {
       const lo = this.minYear;
       const hi = this.maxYear;
@@ -1663,7 +1610,6 @@
       if (from > lo || to < hi) this._bandClip = [from, to];
     }
 
-    // The host page's address bar is not ours, and the link out must drop the embed params.
     _embedOpenUrl() {
       const qs = this._urlStateParams().toString().replace(/%2C/gi, ',');
       const base = typeof location !== 'undefined' ? `${location.origin}${location.pathname}` : '';
@@ -1710,8 +1656,6 @@
         return el;
       };
 
-      // Until clicked, the shield keeps map gestures away from the atlas but leaves default
-      // scrolling alone, so a reader scrolling the host article never gets stuck zooming the map.
       const shield = make('div', 'embed-shield', '');
       shield.setAttribute('role', 'button');
       shield.tabIndex = 0;
@@ -1766,7 +1710,6 @@
       if (this.embed.autoplay && !this.embed.lock) {
         const q = new URLSearchParams(location.search);
         if (q.has('person') || q.has('event') || q.has('journey')) {
-          // The trajectory opens asynchronously after the full snapshots load.
           let tries = 0;
           const timer = setInterval(() => {
             if (this.activePerson) {
@@ -1801,7 +1744,6 @@
       this._id('txt-seal').textContent = this.uiStr('brand_seal', '江山时序');
       const homeLink = this._id('act-home');
       if (homeLink) {
-        // Home = a clean URL in the current language; this is the "reset" entry point.
         homeLink.href = this.locale === 'en' ? './?lang=en' : this.locale === 'zh-tw' ? './?lang=zh-tw' : './';
         homeLink.title = this.locale === 'en' ? 'Back to home' : this._zh('回到首页');
       }
@@ -2150,7 +2092,6 @@
       this._applyZhHantDom();
     }
 
-    // ---------------- Base Layers ----------------
     _isHydroVisible(item, year) {
       if (!item) return false;
       const y = year !== undefined ? year : this.year;
@@ -2227,7 +2168,6 @@
       if (!this.grpRivers) return;
       this.grpRivers.innerHTML = '';
 
-      // 1. Render lakes first (underneath river inflows/outflows)
       for (const lk of this.hydroData.lakes || []) {
         if (!this._isHydroVisible(lk, this.year)) continue;
         const d = (lk.rings || []).map((r) => this.projector.ringToSvgPath(r)).join('');
@@ -2236,7 +2176,6 @@
         this._svgNode('path', { d, class: lkCls }, this.grpRivers);
       }
 
-      // 2. Render subtle parchment casing under trunk rivers (Yangtze, Yellow, Huai)
       for (const riv of this.hydroData.rivers || []) {
         if (riv.rank !== 1 || !this._isHydroVisible(riv, this.year)) continue;
         let d = '';
@@ -2250,7 +2189,6 @@
         this._svgNode('path', { d, class: 'hydro-river-casing' }, this.grpRivers);
       }
 
-      // 3. Render river strokes by rank hierarchy
       for (const riv of this.hydroData.rivers || []) {
         if (!this._isHydroVisible(riv, this.year)) continue;
         let d = '';
@@ -2276,7 +2214,6 @@
         );
       }
 
-      // 4. Render classical & bilingual water and mountain-range captions
       for (const lb of this.hydroData.labels || []) {
         if (!lb.coord || !this._isHydroVisible(lb, this.year)) continue;
         const [lx, ly] = this.projector.toScreen(lb.coord[0], lb.coord[1]);
@@ -2529,8 +2466,6 @@
         }
       }
 
-      // Skip secondary sub-pixel offshore reef specks (<0.6 SVG px) while keeping every
-      // primary territory ring, significant island, and shared boundary intact.
       const activeRings = rawRings.filter((rec) => {
         if (rec.polyIdx === 0 || rec.maxSpan >= 0.6) return true;
         const keys = rec.keys;
@@ -2573,8 +2508,6 @@
         if (nbrs.size !== 2) pinnedKeys.add(k);
       }
 
-      // Simplify each topological chain once so shared borders stay bit-identical across
-      // neighbor fills and deduplicated boundary tiles.
       const RDP_EPS = 0.38;
       const chainCache = new Map();
       const getSimplifiedChain = (subKeys) => {
@@ -2786,7 +2719,6 @@
       this._rescaleSvgTypography();
     }
 
-    // ---------------- Historical Layers ----------------
     _resolvePhase(dynasty, year) {
       if (!dynasty.phases) return null;
       return (
@@ -2871,8 +2803,6 @@
       this._hoveredPrefEl = null;
     }
 
-    // Single deduplicated mesh reproducing smoothRingToSvgPath geometry so
-    // idle .prefecture-shape elements need no GPU fill or stroke passes.
     _buildPrefectureBoundaryPath(prefs) {
       if (!Array.isArray(prefs) || !prefs.length) return '';
       const cached = PREF_BOUNDARY_MESH_CACHE.get(prefs);
@@ -3050,7 +2980,6 @@
       }
 
       const regGroup = this._regOverlayGroup;
-      // Captions stay unclipped; only the lines and hover shapes are cut to the polities.
       const clipAttr = this._prefClipActive ? { 'clip-path': 'url(#prefecture-clip)' } : {};
       const shapesGroup = this._prefShapesGroup;
       if (shapesGroup && typeof shapesGroup.setAttribute === 'function') {
@@ -3159,10 +3088,6 @@
           lbl.textContent = this.trTerm(pol.title);
         }
       }
-      // Prefectures and first-level regions come from a different base map than the polity
-      // outlines, so their coastlines and outer edges disagree with the polity borders. Their
-      // lines are clipped to the snapshot's own (non-neighbor) polities, which leaves the polity
-      // outline as the only border and coastline drawn.
       this._prefClipActive = ownPaths.length > 0;
       const clipPath = this.prefClipPath;
       if (clipPath && typeof clipPath.setAttribute === 'function') clipPath.setAttribute('d', ownPaths.join(''));
@@ -3234,12 +3159,7 @@
       );
       const hasLargePolity = !allCommanderyRegions && polAreas.some((a) => a >= 35);
       const isMultiRegime = !allCommanderyRegions && polList.filter((p) => p && p.role !== 'neighbor').length >= 4;
-      // The boundary build queries many points against the same long rings.
-      // Index candidate edges by latitude; all geometric predicates below stay
-      // exact. The margin also covers nearPolityBorder's distance test.
       const ringEdgeBins = new Map();
-      // The bins must cover the widest upstream distance query, including
-      // multi-regime midpoint (0.55) and endpoint (0.38) exclusions.
       const borderMargin = isMultiRegime ? 0.55 : 0.16, binCount = 64;
       const candidateEdges = (b, y) => {
         if (b.ring.length < 128 || b.maxY <= b.minY) return null;
@@ -3249,8 +3169,6 @@
           const scale = binCount / (b.maxY - b.minY);
           for (let i = 0, j = b.ring.length - 1; i < b.ring.length; j = i++) {
             const y1 = b.ring[i][1], y2 = b.ring[j][1];
-            // Extra neighboring bins make the filter conservative at floating
-            // point bucket boundaries. They never change the final predicates.
             const lo = Math.max(0, Math.floor((Math.min(y1, y2) - borderMargin - b.minY) * scale) - 1);
             const hi = Math.min(binCount - 1, Math.floor((Math.max(y1, y2) + borderMargin - b.minY) * scale) + 1);
             for (let k = lo; k <= hi; k++) bins[k].push(i);
@@ -3311,8 +3229,6 @@
           const ring = b.ring;
           const edges = candidateEdges(b, y);
           for (let k = 0, count = edges ? edges.length : ring.length; k < count; k++) {
-            // Ray edge 0 closes the ring implicitly; the original distance
-            // test only considers explicitly consecutive coordinate pairs.
             const end = edges ? edges[k] : k;
             if (end === 0) continue;
             const i = end - 1;
@@ -3347,9 +3263,6 @@
         return k1 < k2 ? `${k1}|${k2}` : `${k2}|${k1}`;
       };
 
-      // Adjacent phases frequently share the same administrative regions.
-      // Keep only the latest topology, so visiting history does not accumulate
-      // edge maps. Polity-dependent filtering still runs for every snapshot.
       let topology = this._regionBoundaryTopology;
       if (!topology || topology.regions !== snap.regions) {
         const allRings = [];
@@ -3425,7 +3338,6 @@
         }
       }
 
-      // The label-anchor predicate outlives this build; retain no point cache.
       pointPolities.clear();
       ringEdgeBins.clear();
       Object.defineProperty(snap, '_cachedRegionBoundaryPath', {
@@ -3499,7 +3411,6 @@
       this.activeSettlementMask = this._settlementMask(dynasty, this.year);
       this.grpSettlements.innerHTML = '';
       const group = this._svgNode('g', {}, this.grpSettlements);
-      // Paint order: Tier-2 secondary cities first (bottom), Tier-1 cities second, Capitals last (top)
       const activeList = (dynasty.settlements || [])
         .filter(
           (item) =>
@@ -3628,7 +3539,6 @@
         }
       }
 
-      // Render Strategic Passes (名关雄隘 · 天下锁钥): subtle crenellated pass markers
       if (dynasty.key !== 'prc') {
         const activePasses = HistoricalAtlasController.STRATEGIC_PASSES.filter(
           (p) =>
@@ -4192,8 +4102,6 @@
         this.closeMilestoneBalloon();
         return;
       }
-      // Keep an auto callout that already shows this milestone instead of rebuilding it on
-      // every year step, so a tap that lands mid-playback still reaches its buttons.
       const am = this.activeMilestone;
       if (
         am &&
@@ -4489,11 +4397,6 @@
       this._positionMilestoneBalloon();
     }
 
-    // Box of the event city's name, in the same coordinates as the balloon. The event
-    // city is the nearest settlement within 10 CSS px of the pin (event and city
-    // coordinates often differ by a few hundredths of a degree). The name's offset from
-    // the pin is measured only while the camera is still (on open and after each move
-    // settles), so pan and zoom frames reuse it without layout reads.
     _milestoneAnchorLabel(am, sx, sy, scale, rect, px, py) {
       if (!am || !this.svg) return null;
       const moving = Boolean(this.svg.classList && this.svg.classList.contains('is-camera-moving'));
@@ -4513,11 +4416,9 @@
         const name = city && !city.classList.contains('is-crowded-hidden') ? city.querySelector('.name') : null;
         const b = name && name.getBoundingClientRect();
         const x0 = (rect.left || 0) + px, y0 = (rect.top || 0) + py;
-        // A name far from its dot has not been laid out yet; measure again after layout.
         if (b && b.width && Math.hypot((b.left + b.right) / 2 - x0, (b.top + b.bottom) / 2 - y0) > 80) {
           am._labelKey = null;
         } else if (b && b.width) {
-          // Text boxes include some leading; a balloon that only touches the glyphs is fine.
           const pad = -2;
           am._labelOffset = {
             left: b.left - x0 - pad,
@@ -4598,7 +4499,6 @@
           caretDir: 'top',
         });
       }
-      // Keep the event city's own name readable: drop placements that cover it.
       const label = this._milestoneAnchorLabel(am, sx, sy, scale, rect, px, py);
       if (label) {
         const clear = candidates.filter(
@@ -4737,15 +4637,11 @@
       });
     }
 
-    // Phones: a portrait map is taller than wide, so framing with the desktop 0.7 aspect left
-    // wide realms (唐, 元) as a thin strip. Use the real map aspect and keep the box inside the
-    // band not covered by the floating search button (top) and legend (bottom).
     _fitMobileBox(minX, minY, maxX, maxY) {
       const fit = (attempt = 0) => {
         this._cameraViewportRect = null;
         const r = this._getUnscaledSvgRect();
         if (!r || r.width < 40) return;
-        // Mid-transition the map can still be a sliver; retry instead of framing against it.
         if (r.height < 120) {
           if (attempt < 6 && typeof setTimeout === 'function') setTimeout(() => fit(attempt + 1), 150);
           return;
@@ -4760,15 +4656,12 @@
         const cy = (minY + maxY) * 0.5;
         this._animateCameraTo({ x: cx - w * 0.5, y: cy - h * (top + band * 0.5), w, h });
       };
-      // Measure only after a just-toggled bottom sheet has finished resizing the map.
       const wait = 260 - (Date.now() - (this._mobileSheetToggledAt || 0));
       if (wait > 0 && typeof setTimeout === 'function') setTimeout(fit, wait);
       else fit();
     }
 
-    // [top, bottom] fractions of the map height left visible by the mobile floating chrome.
     _mobileMapVisibleBand(svgRect) {
-      // Leave ~56px for the floating search button, but never more than 12% of a short map.
       const top = Math.min(0.12, 56 / svgRect.height);
       let bottom = 0.98;
       const legend = this.mapKey;
@@ -4781,10 +4674,6 @@
       return [top, Math.max(top + 0.3, bottom)];
     }
 
-    // ---------------- Polity Focus (regional / rival regimes) ----------------
-    // A macro-era (e.g. 南北朝) contains several co-existing regimes. Polity focus re-targets the
-    // chronicle pane at one regime's own lifeline. Identity is (snapshot title, year window): the same
-    // title (宋, 齐, 吴, 魏) denotes different regimes in different eras.
     static get POLITY_PROFILES() {
       return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.POLITY_PROFILES) || [];
     }
@@ -4838,8 +4727,6 @@
     _resolvePolity(title, year) {
       const prof = this._polityProfileFor(title, year);
       if (prof) return { ...prof, curated: true };
-      // Uncurated regimes (warlords, short-lived rivals) get the contiguous span in which the
-      // title is drawn on the map around `year`.
       const runs = this._polityPhaseRuns().filter((r) => {
         const snap = this.snapshots && this.snapshots[r.snapKey];
         return snap && (snap.polities || []).some((p) => p.role !== 'neighbor' && p.title === title);
@@ -5062,7 +4949,6 @@
           if (desc.monarchPrefix.some((px) => String(s[3]).startsWith(px))) push(s[3], s[4]);
         }
       }
-      // English era tracks repeat the regime on every ruler ("Emp. Jingzong of W. Xia"); show it once.
       if (en && names.length > 1) {
         const suffix = (names[0].match(/ of [^→]+$/) || [])[0];
         if (suffix && names.every((n) => n.endsWith(suffix))) {
@@ -5072,8 +4958,6 @@
       return names.join(' → ');
     }
 
-    // The era's own regime (唐 in 唐, 宋 in 北宋, 汉 in 东汉) is what the era overview already
-    // describes; it is not a "rival regime" and must not get a fabricated fallback profile.
     _isEraMainPolity(title, dynasty) {
       if (!dynasty || !title) return false;
       const t = String(title).replace(/[（(].*$/, '').trim();
@@ -5092,12 +4976,9 @@
       const cur = this.dynasties[this.dynastyIdx];
       const snap = this.snapshots[this._resolveSnapKey(cur, this.year)] || this.lastRenderedSnap;
       if (this.paneCollapsed) this.toggleChroniclePane(false);
-      // The open event balloon would sit on top of the realm being focused.
       if (this.activeMilestone && this.milestoneBalloon) this.closeMilestoneBalloon();
       if (!desc.curated && this._isEraMainPolity(title, cur)) {
-        // The era's own regime: its "profile" is the era overview, so focus the map instead.
         if (this.activePolity) this.closePolity();
-        // On phones the bottom sheet would hide the very realm being focused.
         if (this._isMobileViewport() && this.mobileChronicleOpen) this.toggleMobileChronicle(false);
         this.eraFocus = { dynastyKey: cur.key };
         if (opts.zoom !== false) this._zoomToPolity(title, snap);
@@ -5115,7 +4996,6 @@
         return null;
       }
       this.eraFocus = null;
-      // An embed has no chronicle pane, so never open the mobile bottom sheet over the map.
       if (!this.embed && this._isMobileViewport() && !this.mobileChronicleOpen) this.toggleMobileChronicle(true);
       const pol = this._polityPolsInSnap(desc, snap)[0];
       desc.tint = (pol && pol.tint) || '';
@@ -5150,13 +5030,11 @@
         this._chronicleScrollRaf = null;
       }
       if (!paneEl) return;
-      // An era-mode smooth scroll may still be in flight; only an explicit instant scroll cancels it.
       if (typeof paneEl.scrollTo !== 'function') {
         paneEl.scrollTop = 0;
         return;
       }
       paneEl.scrollTo({ top: 0, behavior: 'instant' });
-      // Compositor-driven smooth scrolls can still land one frame later; re-pin for two frames.
       if (typeof requestAnimationFrame !== 'function') return;
       const repin = (left) =>
         requestAnimationFrame(() => {
@@ -5167,7 +5045,6 @@
       repin(2);
     }
 
-    // Title of the era's own regime on the current map while it is focused, else null.
     _eraFocusTitle() {
       const cur = this.dynasties[this.dynastyIdx];
       if (!this.eraFocus || !cur || this.eraFocus.dynastyKey !== cur.key) return null;
@@ -5270,7 +5147,6 @@
       const titleEl = this._id('dynasty-title');
       if (titleEl && titleEl.classList) titleEl.classList.toggle('is-long', name.length > (en ? 18 : 4));
       setText('dynasty-span', desc.curated ? span : `${span}${en ? ' (on map)' : '（图中所见）'}`);
-      // Uncurated regimes have no verified capital; label the row as the era instead.
       setText('txt-seat-label', desc.curated ? this.uiStr('capital_k', '都城') : en ? 'Era' : this._zh('时代'));
       setText(
         'dynasty-seat',
@@ -5340,7 +5216,6 @@
             });
             btn.addEventListener('click', () => {
               this.stopAutoplay();
-              // Stages may begin before the formal founding (matchFrom); land on the founding year when possible.
               this.jumpToYear(desc.from <= st.to ? Math.max(st.from, desc.from) : st.from);
               const s = this.snapshots[st.snapKey];
               if (s) this._zoomToPolity(st.title, s);
@@ -5727,7 +5602,6 @@
       this.mapKey.style.display = this.mapKey.firstChild ? 'flex' : 'none';
     }
 
-    // ---------------- Chronicle Sidebar ----------------
     _syncDocumentSeoMeta() {
       if (typeof document === 'undefined') return;
       const baseSiteUrl = 'https://deanchen.me/jiangshan-map/';
@@ -6028,9 +5902,7 @@
       }
     }
 
-    // Place Genealogy & Person Chronicles methods are attached by js/atlas_trace.js.
 
-    // ---------------- Scrubber / Timeline ----------------
     _findDynastyIndex(y) {
       for (let i = this.dynasties.length - 1; i >= 0; i--) {
         if (y >= this.dynasties[i].fromYear) return i;
@@ -6038,11 +5910,8 @@
       return 0;
     }
 
-    // Each dynasty gets a scrubber band proportional to its span, floored at 60 years.
     _initTimelineBands() {
       const minSpan = 60;
-      // An embed restricted to [from, to] shows only that window, linearly, so a 50-year range is
-      // as easy to scrub as the full 2,400 years; otherwise short dynasties get a minimum width.
       const clip = this._bandClip;
       this.bandWeights = this.dynasties.map((d) =>
         clip
@@ -6057,7 +5926,6 @@
       }, 0);
     }
 
-    // [lo, hi] years of a dynasty's band, clipped to the embed window when there is one.
     _bandYearSpan(d) {
       const clip = this._bandClip;
       return clip ? [Math.max(clip[0], d.fromYear), Math.min(clip[1], d.toYear)] : [d.fromYear, d.toYear];
@@ -6087,7 +5955,6 @@
       return Math.round(lo + local * (hi - lo));
     }
 
-    // Coalesce pointermove into one jumpToYear per animation frame and skip unchanged years.
     _bindScrubberDrag(track) {
       let scrubbing = false;
       let trackRect = null;
@@ -6230,7 +6097,6 @@
             startEl.style.transform = `translateX(${px.toFixed(1)}px)`;
             if (maskLeft) maskLeft.style.width = `${Math.max(0, px).toFixed(1)}px`;
           } else {
-            // Pulling the left handle outward expands the visible window left in real time
             const nextStart = Math.max(0, drag.start + progressDelta);
             drag.nextStart = nextStart;
             drag.nextEnd = drag.end;
@@ -6254,7 +6120,6 @@
             endEl.style.transform = `translateX(${-px.toFixed(1)}px)`;
             if (maskRight) maskRight.style.width = `${Math.max(0, px).toFixed(1)}px`;
           } else {
-            // Pulling the right handle outward expands the visible window right in real time
             const nextEnd = Math.min(1, drag.end + progressDelta);
             drag.nextStart = drag.start;
             drag.nextEnd = nextEnd;
@@ -6381,7 +6246,6 @@
     }
 
     _setScrubberView(start, end) {
-      // Use the existing dynasty-weighted progress scale for both the rail and edge handles.
       const span = Math.max(1 / 16, Math.min(1, end - start));
       start = Math.max(0, Math.min(1 - span, start));
       const oldSpan = this._scrubberView ? this._scrubberView.end - this._scrubberView.start : 1;
@@ -6453,7 +6317,6 @@
         const cell = document.createElement('div');
         cell.className = 'band-cell';
         cell.style.flex = `${this.bandWeights[idx]} 1 0`;
-        // Dynasties outside an embed's [from, to] window take no room on its timeline.
         if (!this.bandWeights[idx]) cell.style.display = 'none';
         cell.style.background = d.tint;
         cell.dataset.dynastyIdx = idx;
@@ -6546,7 +6409,6 @@
       });
       const endTick = this._id('tick-present');
       if (endTick) {
-        // A clipped embed timeline ends at its `to` year, not at the present day.
         const end = this._bandClip ? this._bandClip[1] : null;
         endTick.textContent =
           end === null
@@ -6632,8 +6494,6 @@
 
       const motion = this._id('scrubber-motion');
       if (motion) {
-        // The wrapper spans the rail, so percentage transforms use the same
-        // reference width as the previous absolute-positioned thumb.
         motion.style.transform = `translateX(${pct}%)`;
       } else {
         const handle = this._id('scrubber-handle');
@@ -6723,7 +6583,6 @@
         }
       });
 
-      // Auto callouts are kept or replaced by _syncAutoMilestoneBalloon below.
       const am = this.activeMilestone;
       if (am && (am.isAuto ? (this.activePerson || this.isScrubbing) : am.year !== y)) {
         this.closeMilestoneBalloon();
@@ -6849,7 +6708,6 @@
       }
     }
 
-    // ---------------- Autoplay ----------------
     _autoplayIntervalMs() {
       const speed = Number(this.playSpeed) > 0 ? Number(this.playSpeed) : 1;
       return Math.max(20, Math.round(AUTOPLAY_TICK_MS / speed));
@@ -6936,15 +6794,11 @@
       this.closeMilestoneBalloon();
       this._updateAutoplayUi();
       if (this.year >= this.maxYear) this.jumpToYear(this.minYear);
-      // Leave the starting frame on screen for one event beat before the first jump.
       this.playHoldTicks = AUTOPLAY_EVENT_TICKS;
       this._syncAutoMilestoneBalloon(this.dynasties[this.dynastyIdx]);
       this.playInterval = setInterval(() => this._autoplayTick(), this._autoplayIntervalMs());
     }
 
-    // Sorted years the autoplay lands on: every milestone year plus every territory-snapshot
-    // boundary. `hold` marks the nodes that redraw the map (border change, dynasty opening,
-    // snapshot switch) so the border diff gets the longer dwell.
     _autoplayStops() {
       if (!this._autoplayStopList) {
         const holdByYear = new Map();
@@ -6978,8 +6832,6 @@
       }
       const stop = this._autoplayStops().find((s) => s.year > this.year);
       const next = stop ? Math.min(stop.year, this.maxYear) : this.maxYear;
-      // This tick already counts as the first beat on the new node; a camera pan inside
-      // jumpToYear may raise playHoldTicks further (see _syncAutoMilestoneBalloon).
       this.playHoldTicks = (stop && stop.hold ? AUTOPLAY_MAP_CHANGE_TICKS : AUTOPLAY_EVENT_TICKS) - 1;
       this.jumpToYear(next === 0 ? 1 : next);
     }
@@ -7000,7 +6852,6 @@
       this._scheduleUrlSync();
     }
 
-    // ---------------- Classical Guqin Music Player ----------------
     static get GUQIN_TRACKS() {
       return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.GUQIN_TRACKS) || [];
     }
@@ -7104,7 +6955,6 @@
       }
     }
 
-    // ---------------- Camera Pan & Zoom ----------------
     _invalidateTypographyLayout() {
       this._typoDirty = true;
     }
@@ -7189,8 +7039,6 @@
     }
 
     _applyCamera(forceTypography = false) {
-      // Direct camera changes (reset, deep links, pointerup) supersede a queued
-      // input frame. Read the viewport before invalidating SVG layout.
       if (this._camRaf !== null) {
         cancelAnimationFrame(this._camRaf);
         this._camRaf = null;
@@ -7227,8 +7075,6 @@
         }
       }
       this._commitStageTransform();
-      // Keep typography scale(invScale) synchronized on every zoom frame via the
-      // _zoomScaleNodes fast-path so font sizes scale smoothly without stepping.
       const needsTypography =
         forceTypography ||
         this._typoDirty ||
@@ -7243,11 +7089,6 @@
       if (forceTypography) this._scheduleTerrainTiles();
     }
 
-    // ---------------- High-Resolution Terrain Tiles ----------------
-    // The base relief (assets/terrain_relief.webp, 2 px per SVG unit) covers the
-    // default view. Once the camera magnifies it past ~1 CSS px per image px,
-    // Web Mercator hillshade tiles from assets/terrain/ fade in on top; the
-    // base stays underneath so a slow tile never leaves a hole.
     _scheduleTerrainTiles() {
       if (!this.terrainTileLayer) return;
       clearTimeout(this._terrainTileTimer);
@@ -7281,18 +7122,11 @@
       return this._terrainIndexPromise;
     }
 
-    // mode: 'commit' applies and stores level hysteresis (the rendered view), 'peek' applies it
-    // without storing (predicting a flight's destination), 'free' ignores it (idle prefetch).
     _terrainTileLevel(cam, pxPerUnit, mode) {
-      // Keep the default (reset) view on the base image; detail starts once the user zooms in.
       if (cam.w > this._getDefaultCamera().w * 0.8) return null;
-      // Data Saver or a 2G/slow-3G link: the base relief is enough.
       const conn = typeof navigator !== 'undefined' ? navigator.connection : null;
       if (conn && (conn.saveData || /(^|-)2g$|^3g$/.test(conn.effectiveType || ''))) return null;
-      // Sized for CSS pixels, not device pixels: the relief is a 48%-opacity backdrop, and
-      // matching retina density would quadruple the tiles per screen.
       const need = pxPerUnit * this.projector.scale;
-      // Base image: 2 px per SVG unit; no gain while it is not being upscaled.
       if (need <= 2 * this.projector.scale * 0.85) return null;
       const ppd = (lz) => (this._terrainTileSize * 2 ** lz) / 360;
       const levels = [...this._terrainIndex.keys()].sort((a, b) => a - b);
@@ -7304,7 +7138,6 @@
         if (ppd(lz) >= need * 0.8) break;
       }
       if (mode !== 'free') {
-        // Hysteresis: small zoom steps keep the current level instead of refetching a screenful.
         const cur = this._terrainTileZ;
         if (cur !== undefined && levels.includes(cur) && ppd(cur) <= maxPpd) {
           if (ppd(cur) >= need * 0.65 && ppd(cur) <= need * 2.4) z = cur;
@@ -7314,10 +7147,8 @@
       return z;
     }
 
-    // Tiles covering what `cam` shows, nearest to the viewport centre first.
     _terrainTilesFor(cam, mode) {
       const rect = this._cameraViewportRect || this.svg.getBoundingClientRect();
-      // The SVG letterboxes the camera box (xMidYMid meet), so the visible area can exceed it.
       const pxPerUnit = rect.width && rect.height ? Math.min(rect.width / cam.w, rect.height / cam.h) : 0;
       const z = this.terrainMode && pxPerUnit ? this._terrainTileLevel(cam, pxPerUnit, mode) : null;
       if (z === null) return [];
@@ -7345,7 +7176,6 @@
       for (let x = x0; x <= x1; x++) {
         for (let y = y0; y <= y1; y++) {
           const dist = Math.hypot(x + 0.5 - fx, y + 0.5 - fy);
-          // Fall back to the nearest coarser level where the finest one was not built.
           for (let lz = z; lz >= minZ; lz--) {
             const d = z - lz;
             const t = { z: lz, x: x >> d, y: y >> d, dist, top: lz === z };
@@ -7361,7 +7191,6 @@
       return [...out].sort((a, b) => a[1].dist - b[1].dist);
     }
 
-    // Warm the HTTP cache without touching the DOM.
     _prefetchTerrainTiles(tiles, limit) {
       if (typeof Image !== 'function') return;
       if (!this._terrainPrefetched) this._terrainPrefetched = new Set();
@@ -7378,17 +7207,14 @@
       }
     }
 
-    // A camera flight is starting: fetch the destination's tiles while it is in the air.
     _prefetchTerrainForTarget(targetCam, zoomInput) {
       if (!this._terrainReady() || !this._terrainIndex) return;
       clearTimeout(this._terrainTargetTimer);
       const run = () => this._prefetchTerrainTiles(this._terrainTilesFor(targetCam, 'peek'), 48);
-      // Wheel ticks retarget every few ms; wait for the target to stop moving.
       if (zoomInput) this._terrainTargetTimer = setTimeout(run, 60);
       else run();
     }
 
-    // The screen is complete: quietly fetch the centre of the next zoom-in and zoom-out views.
     _prefetchTerrainNeighbours() {
       const cam = this.camera;
       const cx = cam.x + cam.w / 2;
@@ -7442,7 +7268,6 @@
         if (gen === this._terrainTileGen) dropStale();
       }, 2500);
       const NS = 'http://www.w3.org/2000/svg';
-      // `fresh` is centre-out, so the tiles the user is looking at are requested first.
       for (const [key, t] of fresh) {
         const n = 2 ** t.z;
         const lonW = (t.x / n) * 360 - 180;
@@ -7453,7 +7278,6 @@
         const [px1, py1] = this.projector.toScreen(lonE, latS);
         const img = document.createElementNS(NS, 'image');
         img.setAttribute('class', 'terrain-tile');
-        // A hair of overlap hides anti-aliased seams between neighbours.
         img.setAttribute('x', (px0 - 0.02).toFixed(3));
         img.setAttribute('y', (py0 - 0.02).toFixed(3));
         img.setAttribute('width', (px1 - px0 + 0.04).toFixed(3));
@@ -7465,7 +7289,6 @@
         });
         img.addEventListener('error', settle);
         img.setAttribute('href', `assets/terrain/${t.z}/${t.x}/${t.y}.webp`);
-        // Coarser fallback tiles sit beneath finer neighbours they overlap.
         if (t.top) layer.appendChild(img);
         else layer.insertBefore(img, layer.firstChild);
         this._terrainTiles.set(key, img);
@@ -7559,7 +7382,6 @@
       const wasOpen = Boolean(this.mobileChronicleOpen);
       this.mobileChronicleOpen =
         force !== undefined ? force : !this.mobileChronicleOpen;
-      // The sheet is a grid row, so toggling it resizes the map over a 0.22s transition.
       if (wasOpen !== this.mobileChronicleOpen) this._mobileSheetToggledAt = Date.now();
       if (this.mobileChronicleOpen) {
         if (this.paneCollapsed) {
@@ -7673,8 +7495,6 @@
       const narrowMobileCull = isNarrowMobile && z < 3.4;
       const zoomStateKey = `${showTier2 ? 1 : 0}|${showPasses ? 1 : 0}|${showMobilePrefDetail ? 1 : 0}|${narrowMobileCull ? 1 : 0}|${showCorridors ? 1 : 0}|${showSettlements ? 1 : 0}|${showPrefectures ? 1 : 0}|${showPolities ? 1 : 0}|${showMilestones ? 1 : 0}|${showRivers ? 1 : 0}|${showProvNames ? 1 : 0}`;
 
-      // Fast path for pure zoom frames when no visibility tier threshold crossed:
-      // only update scale(invScale) on visible nodes without re-querying DOM or flipping labels.
       if (
         zoomOnly &&
         this._zoomScaleNodes &&
@@ -7711,7 +7531,6 @@
         scaleNodes.push({ node, prefix, suffix });
       };
 
-      // Scale static markers (milestones, journey waypoints, directional chevrons, challenge pins, genealogy overlays)
       this.svg
         .querySelectorAll(
           '.milestone-pin, #grp-journey g[data-x], #grp-challenge g[data-x], #grp-genealogy g[data-x]'
@@ -7728,7 +7547,6 @@
           }
         });
 
-      // Keep active person numbered pins crisp & non-overlapping in real screen pixels at every zoom level
       if (this.activePerson && this.grpJourney) {
         this._rescaleActivePersonPins(vw, s, zoomOnly);
       }
@@ -7764,7 +7582,6 @@
 
       const settlementNodes = Array.from(this.svg.querySelectorAll('.settlement-node'));
 
-      // Sync traced Tier-2 city visibility state and reserve all visible city dots and milestone pins
       for (const node of settlementNodes) {
         if (!zoomOnly && node.classList.contains('is-tier2')) {
           const nLng = parseFloat(node.dataset.lng);
@@ -7834,8 +7651,6 @@
       };
       if (showRivers) {
         this.grpRivers.querySelectorAll('.hydro-label').forEach((hl) => {
-          // Mountain-range and zoom-gated boundary-river names are background context:
-          // city, polity, pass, and region labels must never yield to them.
           if (hl.classList.contains('is-range') || hl.classList.contains('is-detail-hydro')) return;
           const hx = parseFloat(hl.getAttribute('data-x'));
           const hy = parseFloat(hl.getAttribute('data-y'));
@@ -8060,7 +7875,6 @@
         occupied.push(best.box);
       };
 
-      // Tier 1: Capitals first (never culled), then Tier-1 primary cities (gently culled on narrow mobile overview if unavoidable)
       for (const node of settlementNodes) {
         if (node.classList.contains('is-capital')) layoutSettlementLabel(node, false);
       }
@@ -8074,7 +7888,6 @@
         }
       }
 
-      // Tier 2: Polity captions (main & rival first, then protectorate & neighbor)
       const polNodes = Array.from(this.grpPolities.querySelectorAll('.polity-caption')).sort(
         (a, b) => {
           const rank = (el) =>
@@ -8197,8 +8010,6 @@
           if (ov < 0.05 * s * s) break;
         }
 
-        // Fallback for very small or narrow polities (e.g., 周, 韩, 中山) where 4-edge padding
-        // was too tight: relax to center-point containment, but NEVER allow jumping outside _polShape.
         if (bestScore > 1.0 * s * s) {
           const fineFallbackOffsets = [
             [0, 0],
@@ -8249,7 +8060,6 @@
       }
       this._lastPolityTier2State = showTier2;
 
-      // Reserve Tier-2 city dots now so pass/Tier-2 labels avoid them while primary cities and polities are not displaced by minor dots
       for (const node of settlementNodes) {
         if (!node.classList.contains('is-tier2')) continue;
         if (!showSettlements || (!showTier2 && !node.classList.contains('is-trace-city'))) {
@@ -8261,7 +8071,6 @@
         occupied.push({ x1: cx - r, y1: cy - r, x2: cx + r, y2: cy + r });
       }
 
-      // Tier 2b: Modern neighboring country watermarks (dodge ancient polities/cities or hide when same-named historical polity is active)
       const activePolityNames = new Set();
       if (showPolities) {
         for (const pNode of polNodes) {
@@ -8338,7 +8147,6 @@
         });
       }
 
-      // Tier 2c: Strategic mountain/river passes (controlled by 关河丝路 layer; only visible when zoomed >= passMinZoom or traced)
       for (const node of settlementNodes) {
         if (node.classList.contains('is-pass')) {
           if (showCorridors && (showPasses || node.classList.contains('is-pass-trace'))) {
@@ -8349,7 +8157,6 @@
         }
       }
 
-      // Tier 3: Corridor captions (dodge or hide if colliding with city/polity labels)
       const corrOffsets = [
         [0, 0],
         [0, -10],
@@ -8406,7 +8213,6 @@
         }
       });
 
-      // Tier 4: Tier-2 secondary cities (visible when z >= tier2MinZoom or traced; auto-flip or cull text if crowded)
       for (const node of settlementNodes) {
         if (node.classList.contains('is-tier2')) {
           if (showTier2 || node.classList.contains('is-trace-city')) {
@@ -8417,7 +8223,6 @@
         }
       }
 
-      // Tier 5: Region / prefecture watermarks (dodge or hide when crowded)
       const regOffsets = [
         [0, 0],
         [0, -14],
@@ -8485,8 +8290,6 @@
         }
       }
 
-      // Tier 6: Mountain-range and boundary-river names share the pass/tier-2 zoom gate and
-      // are lowest priority: slide along the ridge/channel tangent to dodge other labels, else hide.
       if (showRivers) {
         const hydroOffsets = [
           [0, 0],
@@ -8507,8 +8310,6 @@
 
         for (const node of detailHydroNodes) {
           if (!showPasses) {
-            // Below the gate nothing is "placed": dropping the lock lets the label re-seat
-            // itself the moment the user zooms back in, instead of staying hidden.
             node.classList.add('is-crowded-hidden');
             delete node.dataset.placed;
             continue;
@@ -8536,8 +8337,6 @@
           const ny = ux;
           const maxOvArea = 4 * hw * hh * 0.045;
 
-          // Only a visible placement is worth locking across zoom frames; a label that was
-          // crowded out keeps retrying, since shrinking text frees room as the user zooms in.
           if (zoomOnly && node.dataset.placed === '1' && !node.classList.contains('is-crowded-hidden')) {
             const cx = parseFloat(node.getAttribute('data-x'));
             const cy = parseFloat(node.getAttribute('data-y'));
@@ -8584,7 +8383,6 @@
       this._zoomScaleNodes = scaleNodes;
       this._lastZoomStateKey = zoomStateKey;
       this._lastInvScale = invScale;
-      // City names may have moved or appeared: let an open event balloon re-check them.
       if (this.activeMilestone && this.milestoneBalloon && !this.milestoneBalloon.classList.contains('is-hidden')) {
         this.activeMilestone._labelKey = null;
         this._positionMilestoneBalloon();
@@ -8774,7 +8572,6 @@
       if (this.flyRaf == null) return;
       cancelAnimationFrame(this.flyRaf);
       this.flyRaf = null;
-      // Cancellation skips the flight's final frame, including its cleanup.
       if (this.activePerson) this._invalidateTypographyLayout();
       clearTimeout(this._cameraSettleTimer);
       this._cameraSettleTimer = setTimeout(() => this._finishCameraMotion(), 120);
@@ -8820,7 +8617,6 @@
       this.flyRaf = requestAnimationFrame(step);
     }
 
-    // Custom Route & AI-Native Public API methods are attached by js/atlas_api.js.
 
     resetCamera() {
       this.clearCustomRoute();
@@ -8830,8 +8626,6 @@
     zoomBy(factor, clientX, clientY, animate = true) {
       if (!Number.isFinite(factor) || factor <= 0) return;
       this._recordGestureMove();
-      // Repeated key presses accumulate against the pending zoom destination.
-      // A navigation flight is interrupted from its current visible camera.
       const cam = (animate && this._cameraTargetIsZoom && this._cameraTarget) || this.camera;
       const [mx, my] =
         clientX !== undefined && clientY !== undefined
@@ -8889,18 +8683,14 @@
       ];
     }
 
-    // ---------------- Dual-Mode Challenge ----------------
     _stripPromptParenthetical(name) {
       return String(name || '')
         .replace(/（[^）]+）|\([^)]+\)/g, '')
         .trim();
     }
 
-    // Quiz / Dual-Mode Challenge methods are attached by js/atlas_quiz.js.
 
-    // Historical Journeys (青史行迹) methods are attached by js/atlas_trace.js.
 
-    // Global Quick Search methods are attached by js/atlas_search.js.
 
     _closeLayersPopover() {
       const layersPopover = this._id('layers-popover');
@@ -8931,7 +8721,6 @@
       return true;
     }
 
-    // Dismiss the topmost active popover, sheet, or mode one layer at a time.
     _dismissTopOverlay() {
       if (this._closeMorePopover && this._closeMorePopover()) return true;
       if (this._closeLayersPopover()) return true;
@@ -8978,9 +8767,7 @@
       return false;
     }
 
-    // ---------------- Event Listeners ----------------
     _attachListeners() {
-      // Quick Search box
       const searchInp = this._id('inp-map-search');
       const searchList = this._id('map-search-results');
       let activeSearchIdx = -1;
@@ -9300,7 +9087,6 @@
         });
       }
 
-      // Layer popover menu & checkboxes
       const layersBtn = this._id('act-layers-menu');
       const layersPopover = this._id('layers-popover');
       if (layersBtn && layersPopover) {
@@ -9536,11 +9322,9 @@
         stepNextBtn.addEventListener('click', () => this.stepTimelineNode(1));
       }
 
-      // Scrubber dragging (smooth continuous scrubbing anywhere on the bar)
       const track = this._id('scrubber-track');
       this._bindScrubberDrag(track);
       this._bindScrubberNavigator();
-      // Touching the event callout ends autoplay, like any other input.
       this.milestoneBalloon.addEventListener('pointerdown', () => {
         if (this.playing) this.stopAutoplay();
       });
@@ -9610,7 +9394,6 @@
         });
       }
 
-      // Keyboard navigation
       window.addEventListener('keydown', (e) => {
         if (e.isComposing || e.keyCode === 229) return;
         if ((e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) && e.target.tagName !== 'INPUT') {
@@ -9696,7 +9479,6 @@
         }
       });
 
-      // SVG Zoom & Pan (Mouse Wheel + Single-Finger Pan + Two-Finger Pinch Zoom)
       const viewportFrame = this._id('viewport-frame') || this.svg;
       viewportFrame.addEventListener(
         'wheel',
@@ -9717,9 +9499,6 @@
           this._cancelCameraAnimation();
           this._recordGestureMove();
           const [mx, my] = this._clientToSvgPoint(e.clientX, e.clientY);
-          // Trackpad pinch is encoded as ctrl+wheel with deltaY = -100*log(scale).
-          // Decode pinch directly; ordinary wheel/two-finger scrolling retains
-          // its existing sensitivity and per-event limit.
           const delta = e.ctrlKey ? rawDelta : Math.max(-220, Math.min(220, rawDelta));
           const factor = Math.exp(-delta * (e.ctrlKey ? 0.01 : 0.002));
           const nextW = Math.max(100, Math.min(1300, this.camera.w / factor));
@@ -10138,7 +9917,6 @@
 
       const endPointer = (e) => {
         clearLongPress();
-        // Preserve the last move even when pointerup/cancel arrives before rAF.
         if (this._camRaf !== null) this._applyCamera();
         this.activePointers.delete(e.pointerId);
         if (this.activePointers.size < 2) {
@@ -10176,7 +9954,6 @@
           const pend = this.challenge.pendingGuess;
           const svgPerPx = this.camera.w / Math.max(1, this.svg.getBoundingClientRect().width);
           if (pend && Math.hypot(sx - pend[0], sy - pend[1]) <= 14 * svgPerPx) {
-            // Clicking the pending mark again confirms it.
             this._evaluateLocateClick(pend[0], pend[1]);
           } else {
             this._previewLocatePin(sx, sy);
@@ -10252,7 +10029,6 @@
           }
           const cur = this.dynasties[this.dynastyIdx];
 
-          // Clicking the city name text (e.g. "长安"), the onboarding whisper tag, or a city dot without an overlapping unopened event pin -> trace place history
           const milestoneAlreadyAnchored =
             Boolean(milestoneEl && cur) &&
             (() => {
@@ -10282,7 +10058,6 @@
             return;
           }
 
-          // Clicking an event diamond pin (◆) -> open event balloon (or trace place history if balloon is already open)
           if (milestoneEl && cur) {
             const m = this._resolvePinMilestone(cur, milestoneEl);
             const mIdx = m ? (cur.milestones || []).indexOf(m) : -1;
@@ -10336,7 +10111,6 @@
         this.openGenealogyAt(lng, lat);
       });
 
-      // Hover tooltips (Desktop pointermove — coalesced to once per animation frame)
       const frame = this._id('viewport-frame');
       frame.addEventListener('pointermove', (e) => {
         if (e.pointerType === 'touch') return;
@@ -10376,7 +10150,6 @@
         }
         this._updateScaleBar();
       });
-      // The chronicle pane can resize the map without a window resize.
       if (typeof ResizeObserver !== 'undefined') {
         this._cameraResizeObserver = new ResizeObserver(() => {
           if (this._stageWrap && this._stageWrap.style && this._stageWrap.style.transform) {
@@ -10402,22 +10175,14 @@
         });
       }
       this.hoverTip.classList.remove('is-hidden');
-      // Measure at a stable origin so the previous position cannot squeeze a
-      // newly longer card before its final placement is chosen.
       this.hoverTip.style.left = '8px';
       const { width, height } = this.hoverTip.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      // One spacing for every pointer: 16 px clears the top of a default-size
-      // grab hand (its palm sits on the hotspot) without leaving the card
-      // detached, and the pointing hand only extends below its fingertip.
       const gap = 16;
       const belowGap = 56;
       const padding = 8;
-      // Center above the hovered point; the measured size lets wrapped cards
-      // shift or flip at the map edges.
       const preferredLeft = x - width * 0.5;
-      // City names can sit above the dot; leave the name readable too.
       const anchorTop = avoidEl ? Math.min(y, avoidEl.getBoundingClientRect().top - rect.top) : y;
       const preferredTop = anchorTop - gap - height >= padding
         ? anchorTop - gap - height : y + belowGap;
@@ -10427,7 +10192,6 @@
       this.hoverTip.style.top = `${top}px`;
     }
 
-    // AI-Native Public API (resolvePlace / inspect / locate / _restoreFromQuery) methods are attached by js/atlas_api.js.
   }
 
   HistoricalAtlasController._extendPrototype = function (mixin) {
@@ -10459,7 +10223,6 @@
 
   window.MercatorProjector = MercatorProjector;
   window.HistoricalAtlasController = HistoricalAtlasController;
-  // Modules such as js/atlas_quiz.js that loaded before this file queue an installer.
   if (Array.isArray(window.__ATLAS_MIXINS)) {
     for (const install of window.__ATLAS_MIXINS.splice(0)) install(HistoricalAtlasController);
   }

@@ -1,19 +1,12 @@
-/**
- * Place Genealogy, Person Chronicles & Historical Journeys Module (点地溯源 · 点人溯事 · 青史行迹)
- * Attaches spatial-temporal place genealogy, multi-person trajectory comparison,
- * custom route visualization, and historical journey methods onto HistoricalAtlasController.
- */
 (function () {
   'use strict';
 
-  // Bound at install time so this file may load before or after js/app.js.
   let HistoricalAtlasController = null;
   let MercatorProjector = null;
   let escHtml = null;
   let SVG_ICONS = null;
 
   class AtlasTraceMixin {
-    // ---------------- Place Genealogy (Trace Place) ----------------
     toggleGenealogySheetExpand(force) {
       const cardEl = this._id('genealogy-card');
       const btnEl = this._id('act-expand-genealogy');
@@ -148,7 +141,6 @@
         );
       });
       if (partial) return partial;
-      // Dynamic fallback strictly for historical monarchs in CHINESE_ERA_SPANS / REGIONAL_ERA_TRACKS
       const allSpans = [
         ...HistoricalAtlasController.CHINESE_ERA_SPANS,
         ...HistoricalAtlasController.REGIONAL_ERA_TRACKS.flatMap((t) => t.spans || []),
@@ -235,8 +227,6 @@
           matchedIdxs = mComma;
         }
       }
-      // Keep full milestone text if all clauses belong to this monarch (e.g. Yongle 1407/1409)
-      // or if slicing would leave a headless relative-year fragment ("次年…", "同年…").
       const candZh =
         matchedIdxs.length > 0 && matchedIdxs.length < clausesZh.length
           ? matchedIdxs.map((i) => clausesZh[i].trim()).join('；')
@@ -687,9 +677,6 @@
           return sameCoreSite || (prev.year === ev.year && km < 65) || (dy <= 1 && km < 25);
         });
         if (dup) {
-          // A curated journey stop outranks a nearby milestone or landmark that
-          // merely mentions the person, and a full landmark sentence upgrades a
-          // short multi-clause milestone fragment (e.g. "李靖平萧铣").
           const upgradeStubToLandmark =
             dup.src === 'M' &&
             ev.src === 'L' &&
@@ -827,9 +814,6 @@
         };
       }
 
-      // Only merge & highlight true contemporaneous encounters (same place <= 45km AND |Δyear| <= 3).
-      // Pair closest year/distance matches symmetrically across all track pairs (tA, tB) so 2-person and 3-person
-      // chronicles match with identical precision regardless of which subset of tracks is compared.
       for (let tA = 0; tA < tracks.length; tA++) {
         for (let tB = tA + 1; tB < tracks.length; tB++) {
           const candPairs = [];
@@ -1465,7 +1449,6 @@
       const cx = (minX + maxX) * 0.5;
       const cy = (minY + maxY) * 0.5;
       const aspect = this._getViewportAspect();
-      // Embeds keep the place/person card at the top right like desktop, not as a bottom sheet.
       const isDesktop = typeof window === 'undefined' || window.innerWidth > 900 || Boolean(this.embed);
       if (!isDesktop) {
         const visTopFrac = this._getPersonVisibleTopFrac();
@@ -1494,7 +1477,6 @@
       if (!ev || !ev.coord) return;
       const [tx, ty] = this.projector.toScreen(ev.coord[0], ev.coord[1]);
       const aspect = this._getViewportAspect();
-      // Embeds keep the place/person card at the top right like desktop, not as a bottom sheet.
       const isDesktop = typeof window === 'undefined' || window.innerWidth > 900 || Boolean(this.embed);
       if (!isDesktop) {
         const visTopFrac = this._getPersonVisibleTopFrac();
@@ -1582,9 +1564,6 @@
         Boolean(isMulti && curIdx >= 0 && !activeEraPersonIdxs.has(pIdx));
       const rawPts = events.map((ev) => this.projector.toScreen(ev.coord[0], ev.coord[1]));
 
-      // Compute zoom-invariant screen-space cluster offsets so co-located pins (e.g. Chang'an ① ②)
-      // never overlap at ANY zoom level on Desktop or Mobile while preserving exact data-x/data-y
-      // for _rescaleSvgTypography's automatic city label culling.
       const clusters = rawPts.map(([sx, sy], i) => {
         const peers = [];
         rawPts.forEach(([ox, oy], j) => {
@@ -1677,9 +1656,6 @@
         };
       });
 
-      // 1. Render understated cartographic trajectory arcs + directional chevrons below pins
-      // - Overview (curIdx < 0): render pins only (no crisscrossing full-life cobweb)
-      // - Single step (curIdx >= 0): render ONLY that step's movement vector(s) (prevStop ──► curStop)
       if (!isMulti) {
         if (curIdx >= 0 && curEv && soloOriginCoord) {
           const prevEv = curIdx > 0 ? events[curIdx - 1] : null;
@@ -1726,7 +1702,6 @@
         }
       }
 
-      // Deduplicate city labels so repeated visits to the same city only print its name once
       const labelOwnerByIdx = new Set();
       const placedCityLabels = [];
       const labelPriorityOrder = events
@@ -2408,8 +2383,6 @@
       if (this.locale === 'zh-tw') this._applyZhHantDom(this._id('genealogy-card'));
     }
 
-    // Stop navigation lives at the bottom of the card, where the reader finishes
-    // the current entry; naming the next stop gives a reason to keep going.
     _renderPersonFooter(events, curIdx, isEn) {
       const footEl = this._id('genealogy-foot');
       if (!footEl) return;
@@ -2773,7 +2746,6 @@
         return false;
       };
 
-      // 1. Dynasty milestones
       for (const m of d.milestones || []) {
         const mCoords = this._milestoneCoords(m);
         const veryClose = mCoords.some((mc) => isCloseCoord(mc, 28));
@@ -2787,7 +2759,6 @@
         }
       }
 
-      // 2. Historical journeys
       for (const j of HistoricalAtlasController.HISTORICAL_JOURNEYS) {
         j.stops.forEach((st) => {
           const inDynSpan = st.year >= d.fromYear && st.year <= d.toYear;
@@ -2813,7 +2784,6 @@
         });
       }
 
-      // 3. Curated landmark events
       const sharesCjkBigram = (a, b) => {
         const s1 = String(a || '');
         const s2 = String(b || '');
@@ -2980,7 +2950,6 @@
       return best;
     }
 
-    /** Polity containing the point, preferring Chinese regimes over peripheral neighbors. */
     _polityAt(lng, lat, snap) {
       const polities = (snap && snap.polities) || [];
       return (
@@ -3086,7 +3055,6 @@
         near = null;
       }
 
-      // Prevent cross-Yangtze false-positive settlement matches between Zhenjiang/Nanjing (south) and Yangzhou/Pukou (north)
       if (
         near &&
         near.km <= 25 &&
@@ -3099,7 +3067,6 @@
         near = null;
       }
 
-      // Prevent north-of-Yangtze Guangling/Jiangdu prefectures from bleeding south into Zhenjiang (lat <= 32.24)
       if (
         lat <= 32.24 &&
         lng >= 118.8 &&
@@ -3120,7 +3087,6 @@
         }
       }
 
-      // Disambiguate overlapping secondary prefectures at border buffers
       if (prefObjs.length > 1) {
         const titles = prefObjs.map((p) => p.title);
         let picked = null;
@@ -3161,7 +3127,6 @@
         }
       }
 
-      // Enforce Region <-> Prefecture & Yangtze/Yellow River consistency and fill coastal/frontier gaps
       if (snap && Array.isArray(snap.regions) && snap.regions.length > 0 && (!d || d.key !== 'prc')) {
         const setReg = (...names) => {
           for (const n of names) {
@@ -3312,12 +3277,6 @@
       return { polity, regionObjs, prefObjs, near, modernLoc: loc };
     }
 
-    /**
-     * Resolve the modern place name a genealogy heading may assert as "今 X".
-     * "今" claims identity, not proximity: only a gazetteer landmark's own `modern` field, or the
-     * nearest settlement within the same 25 km "即此地" radius used by the per-dynasty rows, qualifies.
-     * A leading province already shown as the modern title is dropped ("湖南岳阳" -> "岳阳").
-     */
     _resolveModernIdentity(lng, lat, traceLabel, modernTitle, closestOverall) {
       const IDENTITY_KM = 25;
       const labelLower = String(traceLabel || '').toLowerCase();
@@ -3460,8 +3419,6 @@
         closestOverall
       );
 
-      // A pass may own the heading only when it is nearer than the nearest settlement; otherwise a
-      // seat such as 陕州 (27 km from 函谷关) or 上洛 (9 km from 武关) would be titled as the pass.
       const matchedPassHit = this._findNearbyPass(lng, lat, 30);
       const matchedPass =
         matchedPassHit && !(closestOverall && closestOverall.km < matchedPassHit.km)
@@ -3810,7 +3767,6 @@
       if (this.activeMilestone) this._positionMilestoneBalloon();
     }
 
-    // ---------------- Historical Journeys (青史行迹) ----------------
     static get HISTORICAL_JOURNEYS() {
       return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.HISTORICAL_JOURNEYS) || [];
     }
