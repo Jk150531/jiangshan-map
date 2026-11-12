@@ -4678,6 +4678,16 @@
       return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.POLITY_PROFILES) || [];
     }
 
+    static get POLITY_PLACES() {
+      return (window.ATLAS_LORE_DATA && window.ATLAS_LORE_DATA.CHUNQIU_POLITY_PLACES) || {};
+    }
+
+    _polityPlacesFor(title) {
+      const table = HistoricalAtlasController.POLITY_PLACES;
+      if (!table || !title) return [];
+      return table[title] || [];
+    }
+
     _polityWindow(desc) {
       return [
         desc.matchFrom !== undefined ? desc.matchFrom : desc.from,
@@ -4817,7 +4827,17 @@
             .filter((s) => s.length >= 2 && !stopKws.has(s) && !/^\d/.test(s))
         ),
       ];
-      return { key: `t:${title}@${from}`, zh: title, en: '', titles: [title], from, to, keywords, curated: false };
+      return {
+        key: `t:${title}@${from}`,
+        zh: title,
+        en: '',
+        titles: [title],
+        from,
+        to,
+        keywords,
+        places: this._polityPlacesFor(title),
+        curated: false,
+      };
     }
 
     _polityStages(desc) {
@@ -4880,8 +4900,10 @@
       const mf = desc.curated ? rawMf : rawMf - 1;
       const mt = desc.curated ? rawMt : rawMt + 1;
       const kws = (desc.keywords || []).filter(Boolean);
-      if (!kws.length) return [];
+      const places = (desc.places && desc.places.length ? desc.places : this._polityPlacesFor(desc.zh)).filter(Boolean);
+      if (!kws.length && !places.length) return [];
       const matches = (text) => kws.some((k) => String(text || '').includes(k));
+      const siteHit = (ev) => Boolean(ev.site) && places.includes(ev.site);
       const out = [];
       const seen = new Set();
       for (const d of this.dynasties || []) {
@@ -4894,7 +4916,7 @@
         }
       }
       for (const e of HistoricalAtlasController.PLACE_LANDMARK_EVENTS) {
-        if (e.year < mf || e.year > mt || !matches(e.zh)) continue;
+        if (e.year < mf || e.year > mt || (!matches(e.zh) && !siteHit(e))) continue;
         const sig = `${e.year}:${e.site || ''}`;
         if (seen.has(sig)) continue;
         if (
@@ -5254,8 +5276,8 @@
           li.className = 'polity-empty';
           li.innerHTML = `<span class="ev-yr">—</span><span>${
             en
-              ? 'No dedicated chronicle entries yet; drag the timeline to watch its territory change.'
-              : this._zh('暂无专属编年条目，可拖动时间轴查看其疆域演变。')
+              ? 'This state has no independent dated chronicle in the Spring and Autumn records; drag the timeline to watch its territory change.'
+              : this._zh('《左传》对本国仅零星提及，无独立系年条目；可拖动时间轴查看其疆域演变。')
           }</span>`;
           ul.appendChild(li);
         }
