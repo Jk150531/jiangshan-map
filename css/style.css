@@ -3431,7 +3431,8 @@ html[lang="en"] .genealogy-list li {
   #map-key {
     left: 8px;
     bottom: 8px;
-    max-width: calc(100% - 16px);
+    /* 预留右下角 canvas-br-dock 的宽度，避免窄屏图例横跨整幅与停靠栏相撞 */
+    max-width: calc(100% - 188px);
     padding: 5px 8px;
     font-size: 11px;
     gap: 3px;
