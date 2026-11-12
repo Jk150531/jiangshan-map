@@ -3083,6 +3083,7 @@
             polGroup
           );
           lbl._polShape = pol.shape;
+          lbl._polPath = path;
           lbl.dataset.polityTitle = pol.title;
           lbl.dataset.polityRole = pol.role;
           lbl.textContent = this.trTerm(pol.title);
@@ -7897,7 +7898,9 @@
           const bestDir = node.dataset.chosenDir;
           const best = dirSpec(bestDir);
           if (allowCull && node.classList.contains('is-label-crowded')) {
-            return;
+            const crowdedArea = Math.max(1e-4, (best.box.x2 - best.box.x1) * (best.box.y2 - best.box.y1));
+            if (overlapArea(best.box) > crowdedArea * maxOverlapRatio) return;
+            node.classList.remove('is-label-crowded');
           }
           if (overlapArea(best.box) <= 4.0 * s * s) {
             node.classList.remove('is-label-crowded');
@@ -7946,7 +7949,9 @@
       };
 
       for (const node of settlementNodes) {
-        if (node.classList.contains('is-capital')) layoutSettlementLabel(node, false);
+        // 都城名互相压字时先让位，放大后自动恢复
+        if (node.classList.contains('is-capital'))
+          layoutSettlementLabel(node, !node.classList.contains('is-trace-city'), 0.35);
       }
       for (const node of settlementNodes) {
         if (
@@ -7954,7 +7959,7 @@
           !node.classList.contains('is-tier2') &&
           !node.classList.contains('is-pass')
         ) {
-          layoutSettlementLabel(node, narrowMobileCull, 0.26);
+          layoutSettlementLabel(node, true, 0.4);
         }
       }
 
@@ -8031,17 +8036,31 @@
             : 3.2;
         const hw = (this._estimateLocalTextWidth(node.textContent, cssFontPx, ls) * 0.5 + 5) * s;
         const hh = (cssFontPx * 0.56 + 3.5) * s;
+        const isAnchorLabel =
+          node.classList.contains('main') ||
+          node.classList.contains('neighbor') ||
+          node.classList.contains('is-focused') ||
+          node.classList.contains('is-trace-polity');
+        if (!isAnchorLabel && node._polPath && z < 2.2) {
+          const pb = node._polPath.getBBox();
+          if (pb.width < 2.3 * hw || pb.height < 3.2 * hh) {
+            node.classList.add('is-crowded-hidden');
+            continue;
+          }
+        }
 
         if (zoomOnly && node.dataset.placed === '1' && this._lastPolityTier2State === showTier2) {
           const lockedX = parseFloat(node.getAttribute('data-x'));
           const lockedY = parseFloat(node.getAttribute('data-y'));
-          applyNodeScale(node, lockedX.toFixed(1), lockedY.toFixed(1));
-          occupied.push({
+          const lockedBox = {
             x1: lockedX - hw,
             y1: lockedY - hh,
             x2: lockedX + hw,
             y2: lockedY + hh,
-          });
+          };
+          node.classList.remove('is-crowded-hidden');
+          applyNodeScale(node, lockedX.toFixed(1), lockedY.toFixed(1));
+          occupied.push(lockedBox);
           continue;
         }
 
@@ -8126,6 +8145,11 @@
         setSvgAttribute(node, 'data-x', bestXStr);
         setSvgAttribute(node, 'data-y', bestYStr);
         applyNodeScale(node, bestXStr, bestYStr);
+        if (!isAnchorLabel && bestScore > 1.2 * hw * hh) {
+          node.classList.add('is-crowded-hidden');
+          continue;
+        }
+        node.classList.remove('is-crowded-hidden');
         occupied.push(bestBox);
       }
       this._lastPolityTier2State = showTier2;

@@ -1145,6 +1145,10 @@ h2 {
   stroke-width: 2.8px;
 }
 
+.polity-caption.is-crowded-hidden {
+  display: none;
+}
+
 /* Historical Corridors (Walls / Canals / Silk Road) */
 #grp-corridors {
   pointer-events: stroke;
