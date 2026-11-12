@@ -614,6 +614,13 @@ window.ATLAS_EVENT_PINYIN = {
     ]
   },
   landmarks: [
+    ["tenghou","xuehoulaichaoyulu","luyingongyizhoumengxutengweichang","tenghouxuehoulaichaoyululuyingongyizhoumengxutengweichang","teng"],
+    ["qihuangongguotanshouwuli","jiweihousuimietan","tanzichubenju","qihuangongguotanshouwulijiweihousuimietantanzichubenju","tan"],
+    ["jihoudaquqiguo","qirenquqidi","jiguozhisisuijue","jihoudaquqiguoqirenquqidijiguozhisisuijue","ji"],
+    ["liangbohaotugongerminkui","qinrenchengzhi","suimieliang","liangbohaotugongerminkuiqinrenchengzhisuimieliang","liang"],
+    ["chuzhuangwanghuiqin","bazhishimieyong","yongguosuiwang","chuzhuangwanghuiqinbazhishimieyongyongguosuiwang","yong"],
+    ["wuwanghelvyutanghou","caihoufachu","baijuwuzhanchushijiebai","wuwanghelvyutanghoucaihoufachubaijuwuzhanchushijiebai","tang"],
+    ["wuwanghelvfaxu","miezhi","xuzizhangyubenchu","wuwanghelvfaxumiezhixuzizhangyubenchu","xu"],
     ["hanqiruchusongnv","chulingwangyuzhizhiyiqiulu","hanqiruchusongnvchulingwangyuzhizhiyiqiulu","ying"],
     ["hanqipinzhengqiuyuhuan","zichanjuzhi","weifeilisuoqiu","hanqipinzhengqiuyuhuanzichanjuzhiweifeilisuoqiu","zheng"],
     ["yanghumengjihuanziyujimen","suizhuanluguozhizheng","yanghumengjihuanziyujimensuizhuanluguozhizheng","qufu"],
