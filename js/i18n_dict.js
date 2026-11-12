@@ -2739,6 +2739,7 @@ window.EN_LOCALE = {
     "曹": "Cao",
     "河套": "Hetao (Ordos Loop)",
     "淮上": "Huai River region",
+    "群蛮诸部": "Qunman Tribes",
     "莒": "Ju",
     "邾": "Zhu",
     "滕": "Teng",

@@ -1,12 +1,7 @@
-/**
- * Ancient Place Pinpoint Quiz Module (古地名寻址挑战)
- * Attaches quiz deck construction, clue sanitization, SVG ring/chip rendering,
- * and scoring methods onto HistoricalAtlasController.prototype.
- */
+
 (function () {
   'use strict';
 
-  // Bound at install time so this file may load before or after js/app.js.
   let HistoricalAtlasController = null;
   let escHtml = null;
   const DEG_TO_RAD = Math.PI / 180;
@@ -47,10 +42,7 @@
       }
 
       const ancCore = String(displayAncient || '').trim();
-      // Only mask explicit modern-leak phrases ("今XX城", "为XX建城") or explicit
-      // multi-tier modern province+prefecture strings (e.g. "山东淄博临淄"), without
-      // clobbering authentic historical commandery, prefecture, county, or landmark names
-      // (such as 南阳郡治, 太原郡治, 汉中郡治, 长沙国都, 徐州治所, 雷州半岛, 朝鲜四郡, 《岳阳楼记》).
+
       out = out
         .replace(/今[\u4e00-\u9fa5]{2,4}城/g, '此城')
         .replace(/为(?:南京|北京|上海|天津|重庆|杭州|广州|武汉|长沙|成都|西安)建城/g, '为此城建城');
@@ -74,10 +66,6 @@
       return out;
     }
 
-    // A round climbs from household names to deep cuts: 4 entry questions
-    // (capitals, passes, cities with a city chronicle), 4 places with recorded
-    // events, then 2 prefectures known only by a remark. A short tier is topped
-    // up from the next one so the round always has 10 questions.
     _buildChallengeDeck(preferCurrentDynasty = false) {
       const ROUND = [4, 4, 2];
       const hasEn = this._hasEnDict();
@@ -207,8 +195,7 @@
         vf.classList.remove('is-challenge-answered');
       }
       this._syncChallengeScrubberState(true);
-      // Remember where the player was so a deliberate exit can return there;
-      // a replay ("再来一局") keeps the original spot.
+
       if (!this.challenge) {
         this._preChallengeView = { year: this.year, camera: { ...this.camera } };
       }
@@ -272,8 +259,7 @@
       if (!keepPaneState) {
         this._syncImmersivePaneState();
       }
-      // keepPaneState marks a hand-off to another view (person, place, route);
-      // only a plain exit returns the player to the pre-quiz year and camera.
+
       const back = this._preChallengeView;
       this._preChallengeView = null;
       if (back && !keepPaneState) {
@@ -420,8 +406,6 @@
       this._renderChallengeQuestionText();
     }
 
-    // The guess is a vermilion mark against the answer's ink circle, like a
-    // teacher's red annotation beside the key. The anchor point stays visible.
     _drawQuizMark(svgX, svgY, confirmed) {
       const g = this._svgNode(
         'g',
@@ -436,8 +420,6 @@
       return g;
     }
 
-    // The action chip sits beside the guess where the eye and pointer already
-    // are; the banner holds only the question and post-reveal verdict.
     _setQuizChip(label) {
       if (!this.grpChallenge || typeof this.grpChallenge.querySelector !== 'function') return;
       const mark = this.grpChallenge.querySelector('.quiz-mark');
@@ -597,8 +579,7 @@
         cur.settlement.coord[0],
         cur.settlement.coord[1]
       );
-      // Rings mark the scoring tiers, so the reveal doubles as the rules. Radii
-      // come from the projection on both axes so ring edges match the km scoring.
+
       const [lng0, lat0] = cur.settlement.coord;
       for (const [ringKm, ringPts] of [
         [380, 55],
@@ -620,8 +601,7 @@
           },
           this.grpChallenge
         );
-        // Labels sit on the upper-left of each ring, away from the answer label
-        // on the right and the place names usually centred above the answer.
+
         const tag = this._svgNode(
           'g',
           {

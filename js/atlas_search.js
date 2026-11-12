@@ -1,12 +1,7 @@
-/**
- * Global Quick Search, Chinese Era Parsing & Pinyin Matching Module (全局快搜与纪年/拼音检索引擎)
- * Attaches search index construction, imperial era & monarch resolution, event pinyin matching,
- * multi-person query parsing, result ranking, and selection dispatch onto HistoricalAtlasController.
- */
+
 (function () {
   'use strict';
 
-  // Bound at install time so this file may load before or after js/app.js.
   let HistoricalAtlasController = null;
   let ERA_DYNASTY_PREFIXES = null;
 
@@ -15,7 +10,7 @@
   );
 
   class AtlasSearchMixin {
-    // ---------------- Global Quick Search ----------------
+
     _searchPlaceholder(expanded = false) {
       if (this.locale === 'en') {
         return expanded
@@ -164,7 +159,6 @@
         return [...out];
       };
 
-      // 0a. Historical Figures Chronicle & Event Storyline Index (点人溯事 · 点事溯局)
       const loreLoaded = this._isLoreDetailLoaded();
       for (const p of HistoricalAtlasController.PERSON_PROFILES) {
         const d =
@@ -232,7 +226,6 @@
         });
       }
 
-      // 0b. Map Pinpoint Quiz Mode (舆图寻址 · 古地名小试)
       entries.push({
         kind: 'quiz',
         dynasty: this.dynasties[2] || this.dynasties[0],
@@ -244,7 +237,6 @@
         keywords: '舆图寻址 古地名小试 挑战 猜地名 雅集 quiz pinpoint challenge game'.toLowerCase(),
       });
 
-      // 0. Dynasties / Historical Periods
       for (const d of this.dynasties) {
         const enDyn = (this.enLocale.dynasties && this.enLocale.dynasties[d.key]) || {};
         const nameEn = enDyn.name || d.title;
@@ -273,7 +265,6 @@
         });
       }
 
-      // 0b. Regional & rival regimes (割据 / 并立政权)
       const yrZh = (y) => (y <= 0 ? `前${-y}` : `${y}`);
       const yrEn = (y) => (y <= 0 ? `${-y} BCE` : `${y} CE`);
       for (const p of HistoricalAtlasController.POLITY_PROFILES) {
@@ -315,7 +306,6 @@
         });
       }
 
-      // 1. Historical Settlements (Ancient & Modern Cities)
       for (const d of this.dynasties) {
         const isModernDyn = d.key === 'roc' || d.key === 'prc';
         const enDyn = (this.enLocale.dynasties && this.enLocale.dynasties[d.key]) || {};
@@ -350,7 +340,6 @@
         }
       }
 
-      // 1b. Strategic Historical Passes (名关雄隘 · 天下锁钥)
       for (const p of HistoricalAtlasController.STRATEGIC_PASSES) {
         const dIdx = this._findDynastyIndex(p.focusYear || -200);
         const d = this.dynasties[dIdx] || this.dynasties[0];
@@ -371,7 +360,6 @@
         });
       }
 
-      // 1c. Poetic & Historical Gazetteer (诗词名胜 · 古战场 · 关隘渡口)
       for (const g of HistoricalAtlasController.PLACE_GAZETTEER) {
         const aliases = (g.aliases || []).map((a) => a.toLowerCase());
         const aliasSub = (g.aliases || []).slice(0, 3).join(' · ');
@@ -393,7 +381,6 @@
         });
       }
 
-      // 2. Prefectures & Macro Regions across snapshots
       const seenAdmin = new Set();
       for (const d of this.dynasties) {
         const phaseList = d.phases && d.phases.length ? d.phases : [{ until: d.toYear, snap: `s_${d.key}` }];
@@ -429,7 +416,6 @@
         });
       }
 
-      // 3. Historical Milestones / Events
       const eventEntries = [];
       const eventPinyin = window.ATLAS_EVENT_PINYIN || {};
       for (const d of this.dynasties) {
@@ -456,7 +442,6 @@
         }
       }
 
-      // 3b. Curated Place Landmark Events (名胜史事 · 战役古迹)
       const seenLm = new Set();
       for (const [eventIdx, lm] of HistoricalAtlasController.PLACE_LANDMARK_EVENTS.entries()) {
         if (!lm.zh) continue;
@@ -583,8 +568,7 @@
         return this._compiledEraSpans;
       }
       const spans = HistoricalAtlasController.CHINESE_ERA_SPANS;
-      // [span, lastYear] for the reference track and every regional track, so regimes
-      // like Northern Wei (太和十八年) are searchable alongside the reference eras.
+
       const rawEraSpans = [
         ...spans.map((sp, idx) => [sp, idx + 1 < spans.length ? spans[idx + 1][0] - 1 : 1948]),
         ...HistoricalAtlasController.REGIONAL_ERA_TRACKS.flatMap((t) =>
@@ -652,7 +636,6 @@
       const trimmed = /[\u4e00-\u9fff]/.test(rawTrim) ? this._toHans(rawTrim) : rawTrim;
       const hits = [];
 
-      // Direct Gregorian year match (e.g. "1083", "公元1083年", "前214年", "-214", "221 BCE", "741 CE")
       const directYrMatch = trimmed.match(/^(?:公元)?(前|-)?\s*(\d{1,4})\s*(?:年|bce|bc|ce|ad)?$/i);
       if (directYrMatch) {
         const isBce = Boolean(directYrMatch[1]) || /bce|bc/i.test(trimmed);
@@ -705,8 +688,7 @@
       }
       const seenMonarchOnly = new Set();
       const seenEraHit = new Set();
-      // A hit must reach past the regime name into the era or monarch title, so a bare
-      // regime ('北魏', '金', 'liao') does not list every era or emperor of that regime.
+
       const reachesTail = (s, tailLen) => {
         const at = s.lastIndexOf(prefixQ);
         return at >= 0 && at + prefixQ.length > s.length - tailLen;
@@ -772,7 +754,7 @@
             const dIdx = this._findDynastyIndex(targetY);
             const d = this.dynasties[dIdx];
             const label = this._formatSpanEraZh(sp, targetNum);
-            // Regional tracks repeat some reference spans (e.g. Chen); list each era-year once.
+
             if (seenEraHit.has(`${targetY}|${label}`)) continue;
             seenEraHit.add(`${targetY}|${label}`);
             const titleZh =
@@ -857,7 +839,7 @@
           .replace(/['’‘`\-_.\s]+/g, '');
       const isAscii = /[a-z]/i.test(q) && !/[\u4e00-\u9fa5]/.test(q);
       const qFold = isAscii ? fold(q) : '';
-      // Additional event fallback only; existing query normalization and scores stay intact.
+
       const pinyinQuery = this._eventPinyinQuery(q);
       const index = this._ensureSearchIndex();
       const eraResults = this._matchEraResults(normQ);
@@ -1015,7 +997,6 @@
         }
       }
 
-      // Dynamic zero-config fallback if query matches a known monarch with >=2 historical events
       if (
         !results.some((r) => r.kind === 'person') &&
         !results.some(
@@ -1077,7 +1058,6 @@
         }
       }
 
-      // Finish legacy ranking before pinyin candidates can affect bucket quotas or deduplication.
       const ranked = this._rankQuickSearchResults(results);
       if (!window.ATLAS_EVENT_PINYIN || !this._canMatchEventPinyin(pinyinQuery, ranked.length)) return ranked;
       return this._appendEventPinyinResults(ranked, index, pinyinQuery, hasEraMatch);
@@ -1163,7 +1143,7 @@
         } else if (item.kind === 'event') {
           const dupEv = deduped.some(previous => this._isDuplicateSearchEvent(item, previous));
           if (dupEv) continue;
-          // 同一地点最多留 3 条事件：地名查询否则会被单一遗址的十几条史事占满，挤掉其他朝代与里程碑
+
           const siteKey = (item.milestone && item.milestone.site) || '';
           if (siteKey) {
             const sameSite = deduped.filter(
@@ -1297,7 +1277,7 @@
           this._id('chk-settlements').checked = true;
           this.grpSettlements.classList.remove('is-hidden');
         }
-        // Embeds keep the place/person card at the top right like desktop, not as a bottom sheet.
+
         const isDesktop = typeof window === 'undefined' || window.innerWidth > 900 || Boolean(this.embed);
         const minCityZoom = isDesktop ? 2.4 : 3.25;
         const rawZoom = item.zoom || (item.kind === 'pass' ? 2.35 : item.tier === 2 ? 2.4 : 1.85);
