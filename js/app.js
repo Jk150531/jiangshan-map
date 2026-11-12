@@ -4688,6 +4688,18 @@
       return table[title] || [];
     }
 
+    // 春秋与战国多为同一国的前后两段。取同名、且确属先秦（战国）时段的档案做沿革衔接，
+    // 排除「晋→西晋」「吴→孙吴」「陈→陈朝」「梁→萧梁」这类同名异朝。
+    _polityPreQinProfile(title) {
+      if (!title) return null;
+      const list = HistoricalAtlasController.POLITY_PROFILES;
+      for (const p of list) {
+        if (!(p.titles || []).includes(title)) continue;
+        if (p.from <= -221 && p.to <= -200) return p;
+      }
+      return null;
+    }
+
     _polityWindow(desc) {
       return [
         desc.matchFrom !== undefined ? desc.matchFrom : desc.from,
@@ -4827,15 +4839,20 @@
             .filter((s) => s.length >= 2 && !stopKws.has(s) && !/^\d/.test(s))
         ),
       ];
+      const preQin = this._polityPreQinProfile(title);
+      const places = this._polityPlacesFor(title);
       return {
         key: `t:${title}@${from}`,
         zh: title,
-        en: '',
+        en: preQin ? preQin.en || '' : '',
         titles: [title],
         from,
         to,
         keywords,
-        places: this._polityPlacesFor(title),
+        places,
+        seatZh: places[0] || '',
+        seatEn: '',
+        link: preQin ? { key: preQin.key, zh: preQin.zh, en: preQin.en, from: preQin.from, to: preQin.to } : null,
         curated: false,
       };
     }
@@ -4898,12 +4915,17 @@
     _polityEvents(desc) {
       const [rawMf, rawMt] = this._polityWindow(desc);
       const mf = desc.curated ? rawMf : rawMf - 1;
-      const mt = desc.curated ? rawMt : rawMt + 1;
+      // 小国常在最后一帧之后一两年才被灭，留 2 年余量，免得「灭国」这条正好落在窗外。
+      const mt = desc.curated ? rawMt : rawMt + 2;
       const kws = (desc.keywords || []).filter(Boolean);
       const places = (desc.places && desc.places.length ? desc.places : this._polityPlacesFor(desc.zh)).filter(Boolean);
       if (!kws.length && !places.length) return [];
       const matches = (text) => kws.some((k) => String(text || '').includes(k));
       const siteHit = (ev) => Boolean(ev.site) && places.includes(ev.site);
+      // 一字国名（薛、芮、巢、邳、麇、鲜虞一类小国）会在关键字长度过滤中丢掉，
+      // 面板内按国名逐字匹配补一层，避免这些政权永远空着。
+      const singleChar = desc.zh && desc.zh.length === 1 ? desc.zh : null;
+      const nameHit = singleChar ? (ev) => String(ev.zh || '').includes(singleChar) : null;
       const out = [];
       const seen = new Set();
       for (const d of this.dynasties || []) {
@@ -4916,7 +4938,7 @@
         }
       }
       for (const e of HistoricalAtlasController.PLACE_LANDMARK_EVENTS) {
-        if (e.year < mf || e.year > mt || (!matches(e.zh) && !siteHit(e))) continue;
+        if (e.year < mf || e.year > mt || (!matches(e.zh) && !siteHit(e) && !(nameHit && nameHit(e)))) continue;
         const sig = `${e.year}:${e.site || ''}`;
         if (seen.has(sig)) continue;
         if (
@@ -5169,10 +5191,11 @@
       const titleEl = this._id('dynasty-title');
       if (titleEl && titleEl.classList) titleEl.classList.toggle('is-long', name.length > (en ? 18 : 4));
       setText('dynasty-span', desc.curated ? span : `${span}${en ? ' (on map)' : '（图中所见）'}`);
-      setText('txt-seat-label', desc.curated ? this.uiStr('capital_k', '都城') : en ? 'Era' : this._zh('时代'));
+      const hasSeat = Boolean(desc.seatZh);
+      setText('txt-seat-label', hasSeat ? this.uiStr('capital_k', '都城') : en ? 'Era' : this._zh('时代'));
       setText(
         'dynasty-seat',
-        desc.curated
+        hasSeat
           ? en
             ? desc.seatEn || desc.seatZh
             : this._zh(desc.seatZh)
@@ -5190,6 +5213,14 @@
             ? `${name} is one of the regimes drawn on the map during ${eraName} (${span}). Its territorial stages and related events are listed below.`
             : this._zh(`「${desc.zh}」为${eraName}时期并立的政权之一，地图上可见于 ${span}。下方列出其疆域变迁与相关史事。`)
       );
+      if (!desc.curated && desc.link) {
+        const eraLabel = eraName || this._zh('春秋');
+        const cont = en
+          ? ` Note: this state did not end with the ${eraLabel} era — it is the same state recorded later as ${desc.link.en || desc.link.zh} (to ${this.formatYear(desc.link.to)}). The span above is what the map shows for this era.`
+          : this._zh(`注：本政权未随${eraLabel}结束而亡，与前${-desc.link.from}年起的「${desc.link.zh}」是同一国，至前${-desc.link.to}年。上列时间为地图在该时代可见的区段。`);
+        const cur = this._id('dynasty-summary');
+        if (cur && cur.textContent) cur.textContent = cur.textContent + cont;
+      }
       setText(
         'txt-milestones-heading',
         en ? 'Related Events' : this._zh('相关大事')
@@ -5214,6 +5245,19 @@
         let html = '';
         if (rulers) {
           html += `<div class="polity-row"><span class="seat-tag">${en ? 'Rulers' : this._zh('帝系')}</span><span class="polity-rulers">${esc(rulers)}</span></div>`;
+        }
+        if (desc.link) {
+          const notes = {
+            qi_state: [
+              '前386年田氏代齐，姜氏绝祀，国名未改',
+              'the Jiang house was replaced by the Tian clan in 386 BCE; the state kept its name',
+            ],
+          };
+          const note = notes[desc.link.key];
+          const contText = en
+            ? `Same state as ${desc.link.en || desc.link.zh}, continued to ${this.formatYear(desc.link.to)}${note ? ` (${note[1]})` : ''}`
+            : `与「${desc.link.zh}」同为一国，延续至前${-desc.link.to}年${note ? `（${note[0]}）` : ''}`;
+          html += `<div class="polity-row"><span class="seat-tag">${en ? 'Continuity' : this._zh('沿革')}</span><span class="polity-cont">${esc(contText)}</span></div>`;
         }
         if (stages.length) {
           const chips = stages
@@ -5276,8 +5320,12 @@
           li.className = 'polity-empty';
           li.innerHTML = `<span class="ev-yr">—</span><span>${
             en
-              ? 'This state has no independent dated chronicle in the Spring and Autumn records; drag the timeline to watch its territory change.'
-              : this._zh('《左传》对本国仅零星提及，无独立系年条目；可拖动时间轴查看其疆域演变。')
+              ? desc.link
+                ? `No independent dated chronicle for this state in the Spring and Autumn records; see ${desc.link.en || desc.link.zh} for its later chronicle.`
+                : 'This state has no independent dated chronicle in the Spring and Autumn records; drag the timeline to watch its territory change.'
+              : desc.link
+                ? this._zh(`《左传》对本国仅零星提及，无春秋系年条目；其后续大事见「${desc.link.zh}」档案。`)
+                : this._zh('《左传》对本国仅零星提及，无独立系年条目；可拖动时间轴查看其疆域演变。')
           }</span>`;
           ul.appendChild(li);
         }

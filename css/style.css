@@ -3840,6 +3840,11 @@ html[lang="en"] .genealogy-list li {
   color: var(--text-main);
 }
 
+.polity-cont {
+  font-family: var(--serif-stack);
+  color: var(--text-soft, var(--text-main));
+}
+
 .polity-stages {
   display: flex;
   flex-wrap: wrap;
