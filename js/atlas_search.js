@@ -117,6 +117,20 @@
       if (this.searchIndex) return this.searchIndex;
       const entries = [];
       const compiledEraSpans = this._getCompiledEraSpans();
+      const eraTokMap = new Map();
+      for (const c of compiledEraSpans) {
+        const pairs = [
+          [c.monarchZh, 2],
+          [c.shortMonarch, 3],
+        ];
+        for (const [tok, minLen] of pairs) {
+          if (!tok || tok.length < minLen) continue;
+          if (!eraTokMap.has(tok)) eraTokMap.set(tok, []);
+          const list = eraTokMap.get(tok);
+          if (c.eraOnly && c.eraOnly.length >= 2 && !list.includes(c.eraOnly)) list.push(c.eraOnly);
+        }
+      }
+      const eraTokens = [...eraTokMap.keys()];
       const DYN_ALIASES_MAP = {
         zhanguo: ['战国七雄', '春秋战国'],
         qin: ['秦朝', '大秦', '秦'],
@@ -159,17 +173,13 @@
         return [...out];
       };
 
-      const loreLoaded = this._isLoreDetailLoaded();
       for (const p of HistoricalAtlasController.PERSON_PROFILES) {
         const d =
           this.dynasties.find((item) => item.key === p.dynastyKey) ||
           this.dynasties[this._findDynastyIndex(p.span ? p.span[0] : 0)] ||
           this.dynasties[0];
-        const evCount = loreLoaded
-          ? this._collectPersonEvents(p).length
-          : typeof p.evCount === 'number'
-            ? p.evCount
-            : this._collectPersonEvents(p).length;
+        const evCount =
+          typeof p.evCount === 'number' ? p.evCount : (p.stops || []).length;
         const aliases = this._personSearchAliases(p);
         if (p.isStory) {
           const spanStr = Array.isArray(p.span) ? `${p.span[0]}—${p.span[1]}` : '';
@@ -191,15 +201,13 @@
         const eraNames = [];
         if (!p.isRelic) {
           const pText = `${p.zh} ${p.courtesyZh || ''} ${aliases.join(' ')}`;
-          for (const c of compiledEraSpans) {
-            if (
-              c.monarchZh &&
-              c.monarchZh.length >= 2 &&
-              (pText.includes(c.monarchZh) ||
-                (c.shortMonarch && c.shortMonarch.length >= 3 && pText.includes(c.shortMonarch)))
-            ) {
-              if (c.eraOnly && c.eraOnly.length >= 2) eraNames.push(c.eraOnly);
-            }
+          for (const tok of eraTokens) {
+            if (pText.includes(tok)) eraNames.push(...eraTokMap.get(tok));
+          }
+          if (eraNames.length > 1) {
+            const uniqEra = [...new Set(eraNames)];
+            eraNames.length = 0;
+            eraNames.push(...uniqEra);
           }
         }
         const briefCourtesyZh = (p.courtesyZh || d.title).split(/\s*·\s*/)[0];
@@ -442,6 +450,14 @@
         }
       }
 
+      const evByYear = new Map();
+      for (const ev of eventEntries) {
+        if (!ev.coord) continue;
+        const bucket = evByYear.get(ev.rawYear);
+        if (bucket) bucket.push(ev);
+        else evByYear.set(ev.rawYear, [ev]);
+      }
+
       const seenLm = new Set();
       for (const [eventIdx, lm] of HistoricalAtlasController.PLACE_LANDMARK_EVENTS.entries()) {
         if (!lm.zh) continue;
@@ -465,13 +481,11 @@
           subEn: `${yrEn}${lm.siteEn ? ' · ' + lm.siteEn : ''}`,
           pinyinKeys: eventPinyin.landmarks?.[eventIdx] || [],
         };
-        const existingEv = eventEntries.find(
-          (ev) =>
-            ev.rawYear === lm.year &&
-            ev.coord &&
-            lm.coord &&
-            this.projector.greatCircleKm(ev.coord, lm.coord) <= 65
-        );
+        const existingEv = lm.coord
+          ? (evByYear.get(lm.year) || []).find(
+              (ev) => ev.coord && this.projector.greatCircleKm(ev.coord, lm.coord) <= 65
+            )
+          : undefined;
         if (existingEv) {
           existingEv.keywords += ` ${lmKeywords}`;
           if (landmark.pinyinKeys.length) {

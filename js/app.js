@@ -9218,9 +9218,32 @@
             }
           });
         }
-        searchInp.addEventListener('input', renderSearchDropdown);
+        let searchTimer = 0;
+        const scheduleSearchRender = () => {
+          if (searchTimer) clearTimeout(searchTimer);
+          searchTimer = setTimeout(() => {
+            searchTimer = 0;
+            renderSearchDropdown();
+          }, 90);
+        };
+        const warmSearchIndex = () => {
+          if (this.searchIndex) return;
+          const warm = () => {
+            try {
+              this._ensureSearchIndex();
+            } catch (err) {}
+          };
+          if (typeof window.requestIdleCallback === 'function') {
+            window.requestIdleCallback(warm, { timeout: 4000 });
+          } else {
+            setTimeout(warm, 600);
+          }
+        };
+        searchInp.addEventListener('pointerenter', warmSearchIndex, { once: true });
+        searchInp.addEventListener('input', scheduleSearchRender);
         searchInp.addEventListener('focus', () => {
           searchInp.placeholder = this._searchPlaceholder(true);
+          warmSearchIndex();
           renderSearchDropdown();
         });
         searchInp.addEventListener('blur', () => {
@@ -9237,6 +9260,11 @@
         });
         searchInp.addEventListener('keydown', (e) => {
           if (e.isComposing || e.keyCode === 229) return;
+          if (searchTimer) {
+            clearTimeout(searchTimer);
+            searchTimer = 0;
+            renderSearchDropdown();
+          }
           if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && currentResults.length) {
             e.preventDefault();
             const step = e.key === 'ArrowDown' ? 1 : -1;
