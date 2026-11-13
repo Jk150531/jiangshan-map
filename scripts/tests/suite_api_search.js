@@ -1399,7 +1399,7 @@ async function runApiSearchSuite(ctx) {
     // 春秋尚无郡级政区（郡县制起于春秋晚期、行于战国），快照只含诸侯国面与地理区域，故不设郡数下限。
     const minPref = sk.startsWith('s_chunqiu')
       ? 0
-      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a2' || sk === 's_zhanguo_p1' || sk === 's_zhanguo_p2' ||
+      : sk === 's_zhanguo_a' || sk === 's_zhanguo_a375' || sk === 's_zhanguo_a2' || sk === 's_zhanguo_p1' || sk === 's_zhanguo_p2' ||
           sk === 's_zhanguo_p2b' || sk === 's_zhanguo_p2c' || sk === 's_zhanguo_p2d'
         ? 3
         : sk === 's_zhanguo_b0' || sk === 's_zhanguo_b1'
@@ -1419,6 +1419,7 @@ async function runApiSearchSuite(ctx) {
     snapshots.s_zhanguo_p2c.prefectures.length === 3 &&
     snapshots.s_zhanguo_p2d.prefectures.length === 3 &&
     snapshots.s_zhanguo_a.prefectures.length === 3 &&
+      snapshots.s_zhanguo_a375.prefectures.length === 3 &&
       snapshots.s_zhanguo_a2.prefectures.length === 3 &&
       snapshots.s_zhanguo_b0.prefectures.length === 6 &&
       snapshots.s_zhanguo_b1.prefectures.length === 6 &&

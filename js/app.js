@@ -5760,6 +5760,22 @@
         this.mapKey.appendChild(n);
       }
 
+      if (Array.isArray(snap.delta) && snap.delta.length) {
+        const en = this.locale === 'en';
+        const items = snap.delta.map(([t, v, kind]) => {
+          const name = this.trTerm(t);
+          if (kind === 1) return `${name} ${en ? 'appears' : '并入'}`;
+          if (kind === 2) return `${name} ${en ? 'abolished' : '消失'}`;
+          return `${name} ${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}`;
+        });
+        const d = document.createElement('div');
+        d.className = 'key-delta';
+        d.innerHTML =
+          `<span class="key-delta-label">${en ? 'vs previous frame' : '较上一帧'}</span>` +
+          `<span class="key-delta-body">${items.join(en ? ', ' : '、')}</span>`;
+        this.mapKey.appendChild(d);
+      }
+
       if (this._id('chk-corridors') && this._id('chk-corridors').checked) {
         const activeKinds = new Set();
         for (const c of this.corridors) {

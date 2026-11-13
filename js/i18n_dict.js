@@ -2530,6 +2530,9 @@ window.EN_LOCALE = {
   },
   "dict": {
     "战国开篇（前475—前456年 · 晋四卿并立、吴越争衡，中原小国尚存）": "Opening of the Warring States (475 – 456 BCE · four Jin clans, Wu and Yue rival, small central states still standing)",
+    "战国初期（前403—前376年 · 三家分晋、田氏代齐与魏霸中原）": "Early Warring States (403 – 376 BCE · the three clans partition Jin; the Tian clan replaces Qi; Wei dominates the Central Plains)",
+    "战国初期（前375—前341年 · 韩灭郑与魏霸中原）": "Early Warring States (375 – 341 BCE · Han annexes Zheng; Wei dominates the Central Plains)",
+    "前375 年韩哀侯灭郑，郑地并入韩国，韩徙都新郑；中原小国只剩卫、滕、薛、邾、许。": "In 375 BCE Marquess Ai of Han annexed Zheng, absorbed its land and moved his capital to Xinzheng; among the small Central Plains states only Wei, Teng, Xue, Zhu and Xu remain.",
     "战国初期（前453—前449年 · 三家灭智、晋公室仅存绛曲沃）": "Early Warring States (453 – 449 BCE · the three clans destroy Zhi Bo; the Jin house holds only Jiang and Quwo)",
     "战国初期（前447—前434年 · 楚灭蔡）": "Early Warring States (447 – 434 BCE · Chu annexes Cai)",
     "战国初期（前431—前415年 · 楚灭莒）": "Early Warring States (431 – 415 BCE · Chu annexes Ju)",
