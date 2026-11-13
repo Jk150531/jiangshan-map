@@ -5635,6 +5635,7 @@
           const name = this.trTerm(t);
           if (kind === 1) return `${name} ${en ? 'appears' : '并入'}`;
           if (kind === 2) return `${name} ${en ? 'abolished' : '消失'}`;
+          if (kind === 3) return `${name} ${en ? 'renamed' : '更名'}`;
           return `${name} ${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}`;
         });
         const body = items.length

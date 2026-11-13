@@ -141,6 +141,37 @@ for (const dyn of dynasties) {
       if (!cm.has(title)) changes.push({ title, kind: '消失', delta: -p.area, area: 0, dx: 0, dy: 0, role: p.role });
     }
 
+    // 更名配对：A 消失 + B 新增，面积与质心高度接近时视为同一实体的改名（改朝换代、机构改名），
+    // 合并成一条「更名」，避免台账把同一块地读成「丢失 + 新增」。
+    const gone = changes.filter((c) => c.kind === '消失');
+    const fresh = changes.filter((c) => c.kind === '新增');
+    for (const a of gone) {
+      if (a._paired) continue;
+      for (const b of fresh) {
+        if (b._paired) continue;
+        const pa = pm.get(a.title);
+        const ca = cm.get(b.title);
+        if (!pa || !ca) continue;
+        if (String(pa.role) !== String(ca.role)) continue;
+        const big = Math.max(pa.area, ca.area);
+        if (big <= 0.5) continue;
+        if (Math.abs(ca.area - pa.area) / big > 0.2) continue;
+        if (Math.hypot(ca.cx - pa.cx, ca.cy - pa.cy) > 1.5) continue;
+        a._paired = true;
+        b._paired = true;
+        changes.push({
+          title: `${a.title} → ${b.title}`,
+          kind: '更名',
+          delta: ca.area - pa.area,
+          area: ca.area,
+          dx: ca.cx - pa.cx,
+          dy: ca.cy - pa.cy,
+          role: b.role || a.role,
+        });
+      }
+    }
+    for (let i = changes.length - 1; i >= 0; i--) if (changes[i]._paired) changes.splice(i, 1);
+
     const core = changes.filter((c) => isCore(c));
     const other = changes.filter((c) => !isCore(c));
     core.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
