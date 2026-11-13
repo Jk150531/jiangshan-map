@@ -155,7 +155,16 @@ for (const dyn of dynasties) {
         if (String(pa.role) !== String(ca.role)) continue;
         const big = Math.max(pa.area, ca.area);
         if (big <= 0.5) continue;
-        if (Math.abs(ca.area - pa.area) / big > 0.2) continue;
+        // 名称前缀相同（西域都护 → 西域都护府、马腾(凉州) → 马腾·韩遂(关陇)）视为同一实体改名，
+        // 允许较大的面积差；名称毫不相干时只接受面积几乎不变，避免把「甲地被乙地取代」误读成改名。
+        const sameStem = (x, y) => {
+          let n = 0;
+          const m = Math.min(x.length, y.length);
+          while (n < m && x[n] === y[n]) n++;
+          return n >= 2;
+        };
+        const tol = sameStem(a.title, b.title) ? 0.5 : 0.2;
+        if (Math.abs(ca.area - pa.area) / big > tol) continue;
         if (Math.hypot(ca.cx - pa.cx, ca.cy - pa.cy) > 1.5) continue;
         a._paired = true;
         b._paired = true;
