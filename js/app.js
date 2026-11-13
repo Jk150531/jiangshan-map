@@ -977,7 +977,6 @@
       this.grpJourney = this._id('grp-journey');
       this.grpSettlements = this._id('grp-settlements');
       this.grpMilestones = this._id('grp-milestones');
-      this.grpBattles = this._id('grp-battles');
       this.grpChallenge = this._id('grp-challenge');
       this.grpGenealogy = this._id('grp-genealogy');
       this.hoverTip = this._id('hover-tip');
@@ -2042,7 +2041,6 @@
           this._renderSettlements(cur);
           this._renderCorridors();
           this._renderMilestones(cur);
-          this._renderBattles(cur);
           this._withSnapshot(this.activeSnapKey || this._resolveSnapKey(cur, this.year), (snap) =>
             this._renderPolitiesAndPrefectures(cur, snap)
           );
@@ -2774,7 +2772,6 @@
       this._renderSettlements(dynasty);
       this._renderCorridors();
       this._renderMilestones(dynasty);
-      this._renderBattles(dynasty);
       const snapKey = this._resolveSnapKey(dynasty, this.year);
       this.activeSnapKey = snapKey;
       this._withSnapshot(snapKey, (snap) => {
@@ -3687,134 +3684,6 @@
         }
       }
       return best;
-    }
-
-    _renderBattles(dynasty) {
-      if (!this.grpBattles) return;
-      this.grpBattles.innerHTML = '';
-      if (!dynasty) return;
-      const list = (window.ATLAS_BATTLES || []).filter(
-        (b) => b && b.dynasty === dynasty.key && Array.isArray(b.arrows)
-      );
-      if (!list.length) return;
-      const defs = this.svg.querySelector('defs') || this._svgNode('defs', {}, this.svg);
-      const root = this._svgNode('g', {}, this.grpBattles);
-      for (const b of list) {
-        const wrap = this._svgNode('g', { class: 'battle-item', 'data-battle': b.id }, root);
-        const tip = this._svgNode('title', {}, wrap);
-        tip.textContent = `${b.title}（${b.date}）\n${b.summary || ''}`;
-
-        if (b.zone && Array.isArray(b.zone.ring) && b.zone.ring.length > 2) {
-          const patId = `battle-hatch-${b.id}`;
-          const pat = this._svgNode(
-            'pattern',
-            {
-              id: patId,
-              width: 9,
-              height: 9,
-              patternUnits: 'userSpaceOnUse',
-              patternTransform: 'rotate(45)',
-            },
-            defs
-          );
-          this._svgNode(
-            'rect',
-            { width: 9, height: 9, fill: b.zone.color, 'fill-opacity': 0.1 },
-            pat
-          );
-          this._svgNode(
-            'rect',
-            { width: 2.2, height: 9, fill: b.zone.color, 'fill-opacity': 0.42 },
-            pat
-          );
-          const zd = this.projector.ringToSvgPath(b.zone.ring);
-          if (zd) {
-            const zp = this._svgNode('path', { d: zd, class: 'battle-zone' }, wrap);
-            if (zp && zp.style) {
-              zp.style.fill = `url(#${patId})`;
-              zp.style.stroke = b.zone.color;
-            }
-            const sum = b.zone.ring.reduce((s, p) => [s[0] + p[0], s[1] + p[1]], [0, 0]);
-            const [cx, cy] = this.projector.toScreen(
-              sum[0] / b.zone.ring.length,
-              sum[1] / b.zone.ring.length
-            );
-            const lbl = this._svgNode(
-              'text',
-              {
-                class: 'battle-zone-label',
-                x: cx.toFixed(1),
-                y: (cy - 10).toFixed(1),
-                'text-anchor': 'middle',
-              },
-              wrap
-            );
-            lbl.textContent = b.zone.label || '';
-            if (lbl && lbl.style) lbl.style.fill = b.zone.color;
-          }
-        }
-
-        (b.arrows || []).forEach((a, ai) => {
-          if (!a.path || a.path.length < 2) return;
-          const pts = a.path.map((p) => this.projector.toScreen(p[0], p[1]));
-          const color = a.kind === 'defend' ? '#2c6b52' : '#b8342a';
-          const curve = this._battleCurvePath(pts);
-          this._svgNode('path', { d: curve, class: 'battle-arrow-halo' }, wrap);
-          const line = this._svgNode(
-            'path',
-            { d: curve, class: 'battle-arrow' },
-            wrap
-          );
-          if (line && line.style) line.style.stroke = color;
-
-          const end = pts[pts.length - 1];
-          const prev = pts[pts.length - 2];
-          const ang = Math.atan2(end[1] - prev[1], end[0] - prev[0]);
-          const S = 8.5;
-          const hx1 = end[0] - S * Math.cos(ang - 0.42);
-          const hy1 = end[1] - S * Math.sin(ang - 0.42);
-          const hx2 = end[0] - S * Math.cos(ang + 0.42);
-          const hy2 = end[1] - S * Math.sin(ang + 0.42);
-          const head = this._svgNode(
-            'polygon',
-            {
-              class: 'battle-arrow-head',
-              points: `${end[0].toFixed(1)},${end[1].toFixed(1)} ${hx1.toFixed(1)},${hy1.toFixed(
-                1
-              )} ${hx2.toFixed(1)},${hy2.toFixed(1)}`,
-            },
-            wrap
-          );
-          if (head && head.style) head.style.fill = color;
-
-          const midIdx = Math.max(0, Math.min(pts.length - 1, Math.round((pts.length - 1) * 0.62)));
-          const mid = pts[midIdx];
-          const txt = this._svgNode(
-            'text',
-            {
-              class: 'battle-arrow-label',
-              x: (mid[0] + 7).toFixed(1),
-              y: (mid[1] + (ai % 2 ? 15 : -6)).toFixed(1),
-            },
-            wrap
-          );
-          txt.textContent = a.general || a.side;
-          if (txt && txt.style) txt.style.fill = color;
-        });
-      }
-    }
-
-    _battleCurvePath(pts) {
-      if (!pts || !pts.length) return '';
-      let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
-      for (let i = 1; i < pts.length - 1; i++) {
-        const mx = (pts[i][0] + pts[i + 1][0]) / 2;
-        const my = (pts[i][1] + pts[i + 1][1]) / 2;
-        d += ` Q ${pts[i][0].toFixed(1)} ${pts[i][1].toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
-      }
-      const last = pts[pts.length - 1];
-      d += ` L ${last[0].toFixed(1)} ${last[1].toFixed(1)}`;
-      return d;
     }
 
     _renderMilestones(dynasty) {
@@ -9452,14 +9321,6 @@
         }
         this._rescaleSvgTypography();
       });
-
-      const chkBattles = this._id('chk-battles');
-      if (chkBattles && this.grpBattles) {
-        chkBattles.addEventListener('change', (e) => {
-          this.grpBattles.classList.toggle('is-hidden', !e.target.checked);
-          this._rescaleSvgTypography();
-        });
-      }
 
       this._id('act-reset-camera').addEventListener('click', () => this.resetCamera());
       const togglePaneBtn = this._id('act-toggle-pane');
