@@ -18,6 +18,12 @@ const CORE = new Set(
   '秦 楚 齐 燕 赵 魏 韩 鲁 宋 卫 郑 中山 周 越 吴 蜀 巴 莒 蔡 杞 邾 滕 薛 许 义渠 鲜虞 曾 随 陈 曹 虞 晋 智 范 中行 代 东胡 匈奴 林胡 楼烦'.split(' ')
 );
 
+// 是否计入“疆域变动”：有 role 的按 role 判定（neighbor = 画幅外的周边政权，
+// 其整批出现/消失属于图层口径）；无 role 的回退到春秋战国政权白名单。
+// 早期版本只认白名单，导致明清的哈密卫、乌斯藏等保护国（role=protectorate）
+// 消失被误判为“图层口径变化”，进而把真实变动记成零变动。
+const isCore = (c) => (c.role ? c.role !== 'neighbor' : CORE.has(c.title));
+
 function ringArea(r) {
   let a = 0;
   for (let i = 0; i < r.length; i++) {
@@ -135,8 +141,8 @@ for (const dyn of dynasties) {
       if (!cm.has(title)) changes.push({ title, kind: '消失', delta: -p.area, area: 0, dx: 0, dy: 0, role: p.role });
     }
 
-    const core = changes.filter((c) => CORE.has(c.title));
-    const other = changes.filter((c) => !CORE.has(c.title));
+    const core = changes.filter((c) => isCore(c));
+    const other = changes.filter((c) => !isCore(c));
     core.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
     const span = cur.until - prev.until;
     const intensity = core.reduce((s, c) => s + Math.abs(c.delta), 0);
