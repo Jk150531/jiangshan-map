@@ -5760,7 +5760,7 @@
         this.mapKey.appendChild(n);
       }
 
-      if (Array.isArray(snap.delta) && snap.delta.length) {
+      if (Array.isArray(snap.delta)) {
         const en = this.locale === 'en';
         const items = snap.delta.map(([t, v, kind]) => {
           const name = this.trTerm(t);
@@ -5768,11 +5768,16 @@
           if (kind === 2) return `${name} ${en ? 'abolished' : '消失'}`;
           return `${name} ${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}`;
         });
+        const body = items.length
+          ? items.join(en ? ', ' : '、')
+          : en
+            ? 'identical to the previous frame — no territorial change'
+            : '与上一帧几何完全相同，无疆域变动';
         const d = document.createElement('div');
         d.className = 'key-delta';
         d.innerHTML =
           `<span class="key-delta-label">${en ? 'vs previous frame' : '较上一帧'}</span>` +
-          `<span class="key-delta-body">${items.join(en ? ', ' : '、')}</span>`;
+          `<span class="key-delta-body">${body}</span>`;
         this.mapKey.appendChild(d);
       }
 
