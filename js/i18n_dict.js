@@ -4540,6 +4540,8 @@ window.EN_LOCALE = {
     "涿州": "Zhuo Zhou",
     "灤州": "Luan Zhou",
     "府州政区：覆盖内地十八省及东北": "Prefectures: covers the 18 interior provinces & Northeast",
+    "府州政区：覆盖内地十八省及东北｜1860 年《北京条约》另割九龙司（约 7 km²），同样未单独成面；1898 年帧的「九龙新界（英租）」已并入此区。": "Prefectures: covers the 18 interior provinces & Northeast | The 1860 Convention of Peking added Kowloon (c. 7 km²), likewise not drawn as a face; the 1898 frame’s “Kowloon & New Territories (Br. lease)” already absorbs it.",
+    "府州政区：覆盖内地十八省及东北｜1842 年《南京条约》割香港岛予英国（约 78 km²）；本图坐标精度约 1.1 km，维多利亚港最窄仅 1.5 km，香港岛与九龙半岛无法分离，故未单独成面。": "Prefectures: covers the 18 interior provinces & Northeast | The 1842 Treaty of Nanking ceded Hong Kong Island (c. 78 km²) to Britain; at this map’s ~1.1 km coordinate resolution versus a 1.5 km harbour, the island cannot be separated from Kowloon, so it is not drawn as a face.",
     "府州政区（清末 1911 年）": "Prefectures (Late Qing, 1911)",
     "州郡政区：仅覆盖东南核心诸郡": "Commanderies: covers southeastern core commanderies only",
     "州郡政区：仅覆盖东南核心诸郡｜本帧疆域沿用306年几何，永嘉之乱后的州郡易手尚未逐郡建模。": "Commanderies: covers southeastern core commanderies only | Territory carried over from 306 CE; the commandery-level shifts after the Yongjia upheaval are not modelled yet.",
