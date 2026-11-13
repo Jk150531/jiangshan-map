@@ -153,7 +153,7 @@ for (const dyn of dynasties) {
     if (!core.length && !layerShift) {
       md.push('无实质变动（核心政权面积、中心均在阈值内）——**该帧是上一帧的复制，不含独立史实信息**。', '');
       dynReport.pairs.push({ from: prev.snap, to: cur.snap, fromYear: prev.until, toYear: cur.until, span, empty: true, intensity: 0, changes: [] });
-      rows.push({ dyn: dyn.key, pair: label, span, intensity: 0, empty: true, caption: cur.caption, prevCaption: prev.caption });
+      rows.push({ dyn: dyn.key, pair: label, to: cur.snap, span, intensity: 0, empty: true, caption: cur.caption, prevCaption: prev.caption });
       continue;
     }
     if (layerShift) {
@@ -184,7 +184,7 @@ for (const dyn of dynasties) {
       intensity: Math.round(intensity * 100) / 100,
       changes: core.map((c) => ({ title: c.title, kind: c.kind, delta: Math.round(c.delta * 100) / 100, area: Math.round(c.area * 100) / 100, dx: Math.round(c.dx * 100) / 100, dy: Math.round(c.dy * 100) / 100 })),
     });
-    rows.push({ dyn: dyn.key, pair: label, span, intensity: Math.round(intensity * 100) / 100, empty: false, caption: cur.caption, prevCaption: prev.caption });
+    rows.push({ dyn: dyn.key, pair: label, to: cur.snap, span, intensity: Math.round(intensity * 100) / 100, empty: false, caption: cur.caption, prevCaption: prev.caption });
   }
   report.dynasties.push(dynReport);
 }
@@ -202,7 +202,13 @@ md.push('');
 md.push('## 空转帧清单', '');
 const empties = rows.filter((r) => r.empty);
 if (!empties.length) md.push('无。');
-for (const r of empties) md.push(`- ${r.dyn}：${r.pair}`);
+/* 空转帧成因：三帧各自不同，必须逐帧说明，不能统一写成“待查”。 */
+const EMPTY_CAUSE = {
+  s_zhanguo_a: '拆帧设计：前 375 郑灭已单独立为下一帧 a375，本段无第二起边界事件',
+  s_xijin_a2: '数据缺口：疆域沿用 306 年几何；永嘉之乱（311 洛阳陷落、晋失中原）后的州郡易手未逐郡建模，需州郡级边界数据才能切',
+  s_tang_a5y: '史实如此：开元年间渤海册封、六诏未合，均未改变疆界',
+};
+for (const r of empties) md.push(`- ${r.dyn}：${r.pair} — ${EMPTY_CAUSE[r.to] || '成因未分类'}`);
 
 md.push('');
 md.push('## 校验：文案写了事，图上没变化', '');
