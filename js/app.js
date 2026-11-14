@@ -9148,6 +9148,9 @@
         searchInp.addEventListener('pointerenter', warmSearchIndex, { once: true });
         searchInp.addEventListener('input', scheduleSearchRender);
         searchInp.addEventListener('focus', () => {
+          // 每次重新打开搜索框都重新抽一组示例，避免长期固定在两个人名上
+          this._sampleTrioCache = null;
+          this._sampleQueriesCache = null;
           searchInp.placeholder = this._searchPlaceholder(true);
           warmSearchIndex();
           renderSearchDropdown();

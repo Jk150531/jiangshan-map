@@ -1157,25 +1157,65 @@ async function runSearchRuntimeSuite(ctx) {
           );
         }
         const zhChips = Array.from(ctrl._getSearchSampleQueries());
-        assert.deepStrictEqual(zhChips, ['长安', '赤壁', '霍去病', '李白 杜甫 高适']);
-        assert.strictEqual(ctrl._queryQuickSearch('霍去病')[0].kind, 'person');
-        assert.strictEqual(ctrl._queryQuickSearch('李白 杜甫 高适')[0].kind, 'multi_person');
+        assert.strictEqual(
+          zhChips.length,
+          4,
+          'Sample chips must offer 2 places + 1 figure + 1 trio'
+        );
+        for (const idx of [0, 1]) {
+          assert(
+            ctrl._queryQuickSearch(zhChips[idx]).length > 0,
+            `Sample place chip "${zhChips[idx]}" must resolve to a searchable place`
+          );
+        }
+        assert.strictEqual(
+          ctrl._queryQuickSearch(zhChips[2])[0].kind,
+          'person',
+          `Sample figure chip "${zhChips[2]}" must resolve to a person`
+        );
+        const zhTrioHit = ctrl._queryQuickSearch(zhChips[3])[0];
+        assert.strictEqual(
+          zhTrioHit.kind,
+          'multi_person',
+          `Sample trio chip "${zhChips[3]}" must resolve to a multi-person view`
+        );
+        assert.strictEqual(
+          (zhTrioHit.personProfiles || []).length,
+          3,
+          `Sample trio chip "${zhChips[3]}" must contain exactly three linked figures`
+        );
+        const trioZh = ctrl._pickSampleTrio().zh;
         assert(
           ctrl._searchPlaceholder(false).length <= 22 &&
-            ctrl._searchPlaceholder(true).includes('李白 杜甫 高适'),
-          'Chinese compact placeholder must fit 248px pill while expanded placeholder hints 2–3 person syntax'
+            ctrl._searchPlaceholder(true).includes(trioZh),
+          'Chinese compact placeholder must fit 248px pill while expanded placeholder hints the same sample trio as the chips'
         );
 
         ctrl.locale = 'en';
         const enChips = Array.from(ctrl._getSearchSampleQueries());
-        assert.deepStrictEqual(enChips, ["Chang'an", 'Chibi', 'Cao Cao', 'Li Bai, Du Fu, Gao Shi']);
-        assert.strictEqual(ctrl._queryQuickSearch('Cao Cao')[0].kind, 'person');
-        const enPairHit = ctrl._queryQuickSearch('Li Bai, Du Fu, Gao Shi')[0];
+        assert.strictEqual(
+          enChips.length,
+          4,
+          'English sample chips must offer 2 places + 1 figure + 1 trio'
+        );
+        for (const idx of [0, 1]) {
+          assert(
+            ctrl._queryQuickSearch(enChips[idx]).length > 0,
+            `English place chip "${enChips[idx]}" must resolve to a searchable place`
+          );
+        }
+        assert.strictEqual(
+          ctrl._queryQuickSearch(enChips[2])[0].kind,
+          'person',
+          `English figure chip "${enChips[2]}" must resolve to a person`
+        );
+        const enPairHit = ctrl._queryQuickSearch(enChips[3])[0];
         assert(
           enPairHit &&
             enPairHit.kind === 'multi_person' &&
-            enPairHit.titleEn === 'Li Bai × Du Fu × Gao Shi',
-          `English multi-person chip "Li Bai, Du Fu, Gao Shi" must resolve cleanly to Li Bai × Du Fu × Gao Shi, got ${JSON.stringify(enPairHit)}`
+            (enPairHit.personProfiles || []).length === 3 &&
+            !/[\u4e00-\u9fff]/.test(enPairHit.titleEn),
+          `English trio chip "${enChips[3]}" must resolve cleanly to three CJK-free figure names, got ${JSON.stringify(enPairHit)}`
         );
         assert(
           !/[\u4e00-\u9fff]/.test(ctrl._searchPlaceholder(false)) &&

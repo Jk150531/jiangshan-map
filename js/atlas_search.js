@@ -9,25 +9,119 @@
     '齐宋梁陈魏吴楚燕赵韩秦晋鲁巴蜀越周代夏凉唐汉郑顺'.split('')
   );
 
+  // 三人同搜的候选样本：每组三人均有确切的史料交集（同游、同朝共事、同阵营、同一事件），
+  // 避免拼出彼此无关的组合。占位文案与「试试搜」共用同一组，保证两处一致。
+  const SEARCH_SAMPLE_TRIOS = [
+    { zh: '李白 杜甫 高适', en: 'Li Bai, Du Fu, Gao Shi' },
+    { zh: '曹操 刘备 孙权', en: 'Cao Cao, Liu Bei, Sun Quan' },
+    { zh: '曹操 曹丕 曹植', en: 'Cao Cao, Cao Pi, Cao Zhi' },
+    { zh: '苏洵 苏轼 苏辙', en: 'Su Xun, Su Shi, Su Zhe' },
+    { zh: '王安石 司马光 苏轼', en: 'Wang Anshi, Sima Guang, Su Shi' },
+    { zh: '韩愈 柳宗元 刘禹锡', en: 'Han Yu, Liu Zongyuan, Liu Yuxi' },
+    { zh: '羊祜 杜预 王濬', en: 'Yang Hu, Du Yu, Wang Jun' },
+    { zh: '廉颇 蔺相如 赵括', en: 'Lian Po, Lin Xiangru, Zhao Kuo' },
+    { zh: '管仲 鲍叔牙 齐桓公', en: 'Guan Zhong, Bao Shuya, Duke Huan of Qi' },
+    { zh: '李广 卫青 霍去病', en: 'Li Guang, Wei Qing, Huo Qubing' },
+    { zh: '唐太宗 房玄龄 魏征', en: 'Taizong of Tang, Fang Xuanling, Wei Zheng' },
+    { zh: '努尔哈赤 皇太极 多尔衮', en: 'Nurhaci, Hong Taiji, Dorgon' },
+    { zh: '康有为 梁启超 谭嗣同', en: 'Kang Youwei, Liang Qichao, Tan Sitong' },
+    { zh: '曾国藩 李鸿章 左宗棠', en: 'Zeng Guofan, Li Hongzhang, Zuo Zongtang' },
+    { zh: '李商隐 杜牧 温庭筠', en: 'Li Shangyin, Du Mu, Wen Tingyun' },
+    { zh: '欧阳修 曾巩 苏轼', en: 'Ouyang Xiu, Zeng Gong, Su Shi' },
+    { zh: '班固 班超 班昭', en: 'Ban Gu, Ban Chao, Ban Zhao' },
+    { zh: '范仲淹 韩琦 富弼', en: 'Fan Zhongyan, Han Qi, Fu Bi' },
+  ];
+
   class AtlasSearchMixin {
 
+    _pickSampleTrio() {
+      if (!this._sampleTrioCache) {
+        this._sampleTrioCache =
+          SEARCH_SAMPLE_TRIOS[Math.floor(Math.random() * SEARCH_SAMPLE_TRIOS.length)];
+      }
+      return this._sampleTrioCache;
+    }
+
+    _shufflePick(arr, n) {
+      const pool = Array.isArray(arr) ? arr.slice() : [];
+      const out = [];
+      while (out.length < n && pool.length) {
+        out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+      }
+      return out;
+    }
+
+    // 地名取各朝 settlements 中的古地名（点开必有事可看）；排除 near-modern 两朝，
+    // 免得抽出「保定」「阜新」这类现代政区名。人名取事件数 ≥6 的条目，
+    // 避免抽到仅有名字、点开后空白的薄档人物。
+    _getSampleQueryPools() {
+      if (this._samplePoolCache) return this._samplePoolCache;
+      const places = [];
+      const seen = new Set();
+      for (const d of this.dynasties || []) {
+        if (d.key === 'prc' || d.key === 'roc') continue;
+        for (const s of d.settlements || []) {
+          const a = s && s.ancient;
+          if (!a || a.length < 2 || seen.has(a) || !Array.isArray(s.coord)) continue;
+          if (!(s.isCapital || s.remark)) continue;
+          seen.add(a);
+          places.push({ zh: a, en: this._enDict(a) || a });
+        }
+      }
+      const persons = [];
+      const profiles =
+        (typeof window !== 'undefined' &&
+          window.ATLAS_LORE_DATA &&
+          window.ATLAS_LORE_DATA.PERSON_PROFILES) ||
+        [];
+      for (const p of profiles) {
+        if (!p || !p.zh || p.zh.length < 2) continue;
+        if (p.isRelic || p.isStory) continue;
+        if ((p.evCount || 0) < 6) continue;
+        persons.push({ zh: p.zh, en: p.en || p.zh });
+      }
+      const cache = { places, persons };
+      this._samplePoolCache = cache;
+      return cache;
+    }
+
     _searchPlaceholder(expanded = false) {
+      const trio = this._pickSampleTrio();
       if (this.locale === 'en') {
         return expanded
-          ? 'Search figure (or 2–3: Li Bai, Du Fu, Gao Shi) / city / era'
+          ? `Search figure (or 2–3 together: ${trio.en}) / city / era`
           : 'Search figure / multi-person / city / era';
       }
       return this._zh(
         expanded
-          ? '搜人物（可搜双人/三人：李白 杜甫 高适）/ 古今地名 / 年号'
+          ? `搜人物（可搜双人/三人：${trio.zh}）/ 古今地名 / 年号`
           : '搜人物 / 多人同看 / 古今地名 / 年号'
       );
     }
 
     _getSearchSampleQueries() {
-      return this.locale === 'en'
-        ? ["Chang'an", 'Chibi', 'Cao Cao', 'Li Bai, Du Fu, Gao Shi']
-        : ['长安', '赤壁', '霍去病', '李白 杜甫 高适'].map((s) => this._zh(s));
+      if (this._sampleQueriesCache && this._sampleQueriesCacheLocale === this.locale) {
+        return this._sampleQueriesCache;
+      }
+      const trio = this._pickSampleTrio();
+      const pools = this._getSampleQueryPools();
+      let list;
+      if (pools.places.length >= 3 && pools.persons.length >= 1) {
+        const ps = this._shufflePick(pools.places, 2);
+        const pn = this._shufflePick(pools.persons, 1)[0];
+        list =
+          this.locale === 'en'
+            ? [ps[0].en, ps[1].en, pn.en, trio.en]
+            : [ps[0].zh, ps[1].zh, pn.zh, trio.zh].map((s) => this._zh(s));
+      } else {
+        list =
+          this.locale === 'en'
+            ? ["Chang'an", 'Chibi', 'Huo Qubing', trio.en]
+            : ['长安', '赤壁', '霍去病', trio.zh].map((s) => this._zh(s));
+      }
+      this._sampleQueriesCache = list;
+      this._sampleQueriesCacheLocale = this.locale;
+      return list;
     }
 
     _getSearchShowcasePool() {
