@@ -409,7 +409,15 @@ window.EN_LOCALE = {
       "Lülin rebels crown Gengshi Emperor Liu Xuan; Liu Xiu routs Xin at Kunyang, ending Wang Mang",
       "Kunyang & Chang'an"
     ],
-    "donghan:25": [
+            "donghan:194": [
+      "Cao Cao marches east; Lu Bu seizes Yan province. Xiahou Dun holds Puyang and escapes",
+      "Puyang"
+    ],
+"donghan:190": [
+      "Lords rise against Dong Zhuo; Xiahou Dun joins Cao Cao at Chenliu",
+      "Chenliu"
+    ],
+"donghan:25": [
       "Red Eyebrows topple Gengshi in Chang’an; Liu Xiu ascends at Haocheng and makes Luoyang capital",
       "Luoyang"
     ],
@@ -745,7 +753,47 @@ window.EN_LOCALE = {
       "Yuwen Huaji mutinies at Jiangdu and kills Emperor Yang, ending the Sui",
       "Jiangdu"
     ],
-    "tang:627": [
+                                            "tang:897": [
+      "Li Keyong attacks Liu Rengong at Youzhou and withdraws after defeat at Ansai",
+      "Youzhou"
+    ],
+"tang:890": [
+      "Li Keyong takes Luzhou, captures Meng Fangli and holds Zhaoyi",
+      "Luzhou"
+    ],
+"tang:880": [
+      "Tang armies strike Daibei; Li Guochang and his son flee to the Tatars",
+      "Yunzhou"
+    ],
+"tang:878": [
+      "Li Guochang rebels at Zhenwu and raids Daibei with his son Li Keyong",
+      "Zhenwu"
+    ],
+"tang:784": [
+      "Jingyuan mutiny; Zhu Ci holds Chang'an as emperor until Li Sheng retakes it and kills him",
+      "Chang'an"
+    ],
+"tang:782": [
+      "Zhu Ci, Lulong governor, enters the capital and takes command of troops",
+      "Chang'an"
+    ],
+"tang:762": [
+      "Tang and Uyghur armies retake Luoyang; Shi Chaoyi abandons the city for Mozhou",
+      "Luoyang"
+    ],
+"tang:761": [
+      "Shi Chaoyi murders his father Shi Siming at Luqiao post and takes the throne",
+      "Luqiao Post"
+    ],
+"tang:622": [
+      "Liu Heita takes Mingshui; Luo Shixin refuses to surrender and is killed",
+      "Mingshui"
+    ],
+"tang:620": [
+      "Luo Shixin storms Qianjin Fort by night under Li Shimin; Wang Shichong's army collapses",
+      "Qianjin Fort"
+    ],
+"tang:627": [
       "Emperor Taizong inaugurates the Reign of Zhenguan with Fang Xuanling and Du Ruhui",
       "Chang'an"
     ],
@@ -949,7 +997,15 @@ window.EN_LOCALE = {
       "Han Shantong and Liu Futong launch the Red Turban Rebellion at Yingzhou",
       "Yingzhou"
     ],
-    "ming:1368": [
+            "ming:1598": [
+      "Deng Zilong joins the Korean campaign and dies at the Noryang naval battle",
+      "Noryang"
+    ],
+"ming:1583": [
+      "Deng Zilong crushes the Yongchang revolt and overawes western Yunnan",
+      "Yongchang"
+    ],
+"ming:1368": [
       "Zhu Yuanzhang founds the Ming in Yingtian; Xu Da captures Dadu as Yuan retreats north",
       "Yingtian (Nanjing) · Dadu (Beijing)"
     ],
@@ -1021,7 +1077,31 @@ window.EN_LOCALE = {
       "Li Zicheng takes Beijing and topples the Ming; Qing armies enter Shanhai Pass",
       "Beijing"
     ],
-    "qing:1644": [
+                            "qing:1868": [
+      "Lai Wenguang is captured at Wayaopu near Yangzhou and executed",
+      "Yangzhou"
+    ],
+"qing:1866": [
+      "Lai Wenguang and Zhang Zongyu split the Nian; Lai leads the Eastern Nian through Hubei and Henan",
+      "Xuzhou"
+    ],
+"qing:1852": [
+      "Xiao Chaogui leads the Taiping assault on Changsha and is killed by cannon fire",
+      "Changsha"
+    ],
+"qing:1850": [
+      "Xiao Chaogui gathers with Yang Xiuqing at Jintian to plot the uprising",
+      "Jintian"
+    ],
+"qing:1652": [
+      "Jirgalang dies in Beijing and is given the posthumous name Xian",
+      "Beijing"
+    ],
+"qing:1646": [
+      "Jirgalang drives south into Huguang in pursuit of He Tengjiao",
+      "Huguang"
+    ],
+"qing:1644": [
       "Wu Sangui opens Shanhai Pass to Dorgon’s Qing army, which routs Li Zicheng and takes Beijing",
       "Shanhai Pass"
     ],
@@ -1077,7 +1157,47 @@ window.EN_LOCALE = {
       "Wuchang Uprising erupts and sparks the nationwide Xinhai Revolution",
       "Wuchang"
     ],
-    "roc:1912": [
+                                            "roc:1930": [
+      "Xu Xiangqian becomes deputy commander of the First Red Army and its First Division chief",
+      "Huang'an"
+    ],
+"roc:1933": [
+      "Xu Xiangqian breaks the six-route encirclement, annihilating some 80,000 enemy troops",
+      "Tongjiang"
+    ],
+"roc:1941": [
+      "After the New Fourth Army Incident Su Yu commands its First Division",
+      "Yancheng"
+    ],
+"roc:1940": [
+      "Su Yu routs Han Deqin's forces at the battle of Huangqiao",
+      "Huangqiao"
+    ],
+"roc:1947": [
+      "Lin Biao's Northeast Democratic United Army crosses the Songhua three times and holds Linjiang",
+      "Linjiang"
+    ],
+"roc:1934": [
+      "Lin Biao commands the First Red Army Corps and destroys an enemy force at Wenfang",
+      "Wenfang"
+    ],
+"roc:1944": [
+      "Sun Liren's New First Army takes Myitkyina and opens the Stilwell Road",
+      "Myitkyina"
+    ],
+"roc:1942": [
+      "Sun Liren's 38th Division relieves the encircled British at Yenangyaung",
+      "Yenangyaung"
+    ],
+"roc:1943": [
+      "Du Yuming takes command of the Fifth Group Army and Kunming defense",
+      "Kunming"
+    ],
+"roc:1939": [
+      "Du Yuming's Fifth Army wins the bloody battle of Kunlun Pass and kills Nakamure",
+      "Kunlun Pass"
+    ],
+"roc:1912": [
       "Sun Yat-sen founds the Republic of China in Nanjing; Puyi abdicates, ending imperial rule",
       "Nanjing · Beijing"
     ],
@@ -1101,7 +1221,15 @@ window.EN_LOCALE = {
       "Victory over Japan: China formally recovers Taiwan Island and the Penghu Archipelago",
       "Taipei · Nanjing"
     ],
-    "prc:1949": [
+            "prc:1953": [
+      "Peng Dehuai signs the Korean armistice at Panmunjom",
+      "Panmunjom"
+    ],
+"prc:1950": [
+      "Peng Dehuai leads the Chinese volunteer army into Korea and opens the first campaign",
+      "Pyongyang"
+    ],
+"prc:1949": [
       "Mao Zedong proclaims the founding of the People’s Republic of China in Beijing",
       "Beijing"
     ],
